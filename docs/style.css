@@ -172,4 +172,59 @@ body {
     .card-container {
         grid-template-columns: 1fr;
     }
-} */
+
+/* --- 既存のCSSに追記してください --- */
+
+/* コードブロックコンテナのスタイル */
+.code-block-container {
+    position: relative; /* 子要素の絶対配置の基準にする */
+    background-color: #2d2d2d; /* コードブロックの背景色 */
+    color: #f8f8f2; /* コードの文字色 */
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+    overflow-x: auto; /* 横長のコードに対応 */
+}
+
+/* ファイル名/パス表示のスタイル */
+.code-filename {
+    font-size: 0.9em;
+    color: #bbb;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* コードコピーボタンのスタイル */
+.copy-button {
+    position: absolute; /* 親要素（.code-block-container）に対して絶対配置 */
+    top: 10px; /* 上からの位置 */
+    right: 10px; /* 右からの位置 */
+    background-color: #61dafb; /* ボタンの背景色 */
+    color: white; /* 文字色 */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: background-color 0.2s ease;
+    z-index: 10; /* 他の要素より手前に表示 */
+}
+
+.copy-button:hover {
+    background-color: #21a1f1;
+}
+
+/* コード本体のスタイル（syntax highlighterを考慮） */
+.code-block-container pre {
+    margin: 0;
+    padding: 0;
+    white-space: pre-wrap; /* 必要に応じてコードを折り返す */
+    word-break: break-all; /* 単語の途中でも改行 */
+}
+
+.code-block-container code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* 等幅フォント */
+    font-size: 0.9em;
+    line-height: 1.4;
+}
