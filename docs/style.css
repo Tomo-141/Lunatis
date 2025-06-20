@@ -1,4 +1,7 @@
-/* 基本的なリセット */
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -7,62 +10,62 @@ body {
     padding-top: 60px; /* ヘッダーの高さ分、コンテンツを下にずらす */
 }
 
-/* メインヘッダーのスタイル */
+/* メインヘッダーのスタイル (変更なし) */
 .main-header {
-    background-color: #282c34; /* 暗めの背景色 */
-    color: #fff; /* 文字色 */
+    background-color: #282c34;
+    color: #fff;
     padding: 10px 20px;
-    position: fixed; /* これが重要！画面上部に固定 */
-    width: 100%; /* 横幅いっぱいに広げる */
-    top: 0; /* 画面の上端に配置 */
-    left: 0; /* 画面の左端に配置 */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* 影で立体感を出す */
-    z-index: 1000; /* 他の要素より手前に表示 */
-    box-sizing: border-box; /* paddingを含めてwidthを計算 */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+    box-sizing: border-box;
 }
 
 .header-content {
-    display: flex; /* Flexboxで要素を横並びに */
-    justify-content: space-between; /* 両端揃え */
-    align-items: center; /* 垂直方向中央揃え */
-    max-width: 1200px; /* 最大幅を設定（任意） */
-    margin: 0 auto; /* 中央寄せ */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .site-title {
     margin: 0;
     font-size: 1.5em;
-    white-space: nowrap; /* タイトルが折り返さないように */
+    white-space: nowrap;
 }
 
-/* ナビゲーションメニューのスタイル */
+/* ナビゲーションメニューのスタイル (変更なし) */
 .main-nav ul {
-    list-style: none; /* リストの点マークを消す */
+    list-style: none;
     margin: 0;
     padding: 0;
-    display: flex; /* Flexboxでリンクを横並びに */
+    display: flex;
 }
 
 .main-nav li {
-    margin-left: 20px; /* リンク間のスペース */
+    margin-left: 20px;
 }
 
 .main-nav a {
-    color: #fff; /* リンクの文字色 */
-    text-decoration: none; /* 下線を消す */
+    color: #fff;
+    text-decoration: none;
     font-weight: bold;
-    transition: color 0.3s ease; /* ホバー時のアニメーション */
+    transition: color 0.3s ease;
 }
 
 .main-nav a:hover {
-    color: #61dafb; /* ホバー時の色 */
+    color: #61dafb;
 }
 
-/* メインコンテンツのスタイル */
+/* メインコンテンツのスタイル (変更なし) */
 .main-content {
-    max-width: 1200px; /* メインコンテンツの最大幅 */
-    margin: 20px auto; /* 中央寄せと上下の余白 */
-    padding: 0 20px; /* 左右の余白 */
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
 }
 
 .content-section {
@@ -80,7 +83,70 @@ body {
     margin-top: 0;
 }
 
-/* フッターのスタイル */
+/* --- ここから追加 --- */
+
+/* AエリアとBエリアのコンテナに共通のスタイル */
+.area-a, .area-b {
+    min-height: 150px; /* 最低限の高さ */
+    /* background-color: #e9e9e9; */ /* デバッグ用、後で削除または調整 */
+    /* border: 1px dashed #ccc; */ /* デバッグ用、後で削除または調整 */
+}
+
+/* カードコンテナのスタイル (Aエリア内のカードを並べる用) */
+.card-container {
+    display: grid; /* Gridレイアウトを使用 */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* レスポンシブな複数列 */
+    gap: 20px; /* カード間のスペース */
+    margin-top: 20px;
+}
+
+/* 個々のカードのスタイル */
+.info-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* ホバー時のアニメーション */
+    cursor: pointer; /* クリック可能であることを示す */
+}
+
+.info-card:hover {
+    transform: translateY(-5px); /* 少し上に移動 */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* 影を濃くする */
+}
+
+.info-card h3 {
+    margin-top: 0;
+    color: #282c34;
+    font-size: 1.2em;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+}
+
+.info-card p {
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.info-card .card-link {
+    display: inline-block; /* リンクをブロック要素のように扱い、余白を設定 */
+    background-color: #61dafb;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.8em;
+    transition: background-color 0.3s ease;
+}
+
+.info-card .card-link:hover {
+    background-color: #21a1f1;
+}
+
+/* フッターのスタイル (変更なし) */
 .main-footer {
     text-align: center;
     padding: 20px;
@@ -88,3 +154,22 @@ body {
     color: #666;
     margin-top: 30px;
 }
+
+/* --- レスポンシブ対応の考慮（今は適用しないが参考として） --- */
+/* @media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .main-nav ul {
+        flex-direction: column;
+        width: 100%;
+        margin-top: 10px;
+    }
+    .main-nav li {
+        margin: 5px 0;
+    }
+    .card-container {
+        grid-template-columns: 1fr;
+    }
+} */
