@@ -1,0 +1,90 @@
+/* 基本的なリセット */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    padding-top: 60px; /* ヘッダーの高さ分、コンテンツを下にずらす */
+}
+
+/* メインヘッダーのスタイル */
+.main-header {
+    background-color: #282c34; /* 暗めの背景色 */
+    color: #fff; /* 文字色 */
+    padding: 10px 20px;
+    position: fixed; /* これが重要！画面上部に固定 */
+    width: 100%; /* 横幅いっぱいに広げる */
+    top: 0; /* 画面の上端に配置 */
+    left: 0; /* 画面の左端に配置 */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* 影で立体感を出す */
+    z-index: 1000; /* 他の要素より手前に表示 */
+    box-sizing: border-box; /* paddingを含めてwidthを計算 */
+}
+
+.header-content {
+    display: flex; /* Flexboxで要素を横並びに */
+    justify-content: space-between; /* 両端揃え */
+    align-items: center; /* 垂直方向中央揃え */
+    max-width: 1200px; /* 最大幅を設定（任意） */
+    margin: 0 auto; /* 中央寄せ */
+}
+
+.site-title {
+    margin: 0;
+    font-size: 1.5em;
+    white-space: nowrap; /* タイトルが折り返さないように */
+}
+
+/* ナビゲーションメニューのスタイル */
+.main-nav ul {
+    list-style: none; /* リストの点マークを消す */
+    margin: 0;
+    padding: 0;
+    display: flex; /* Flexboxでリンクを横並びに */
+}
+
+.main-nav li {
+    margin-left: 20px; /* リンク間のスペース */
+}
+
+.main-nav a {
+    color: #fff; /* リンクの文字色 */
+    text-decoration: none; /* 下線を消す */
+    font-weight: bold;
+    transition: color 0.3s ease; /* ホバー時のアニメーション */
+}
+
+.main-nav a:hover {
+    color: #61dafb; /* ホバー時の色 */
+}
+
+/* メインコンテンツのスタイル */
+.main-content {
+    max-width: 1200px; /* メインコンテンツの最大幅 */
+    margin: 20px auto; /* 中央寄せと上下の余白 */
+    padding: 0 20px; /* 左右の余白 */
+}
+
+.content-section {
+    background-color: #fff;
+    padding: 25px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.content-section h2 {
+    color: #282c34;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+/* フッターのスタイル */
+.main-footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #eee;
+    color: #666;
+    margin-top: 30px;
+}
