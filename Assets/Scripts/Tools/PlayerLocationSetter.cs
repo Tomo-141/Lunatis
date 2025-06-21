@@ -1,40 +1,40 @@
-// PlayerLocationSetter.cs
-// ‚±‚ÌƒXƒNƒŠƒvƒg‚ÍAƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ª‰ŠúˆÊ’u‚Æ‚µ‚Äw’è‚·‚×‚«MapNode‚Ìî•ñ‚ğæ“¾‚·‚é‹@”\‚ğ’ñ‹Ÿ‚µ‚Ü‚·B
-// ƒ}ƒbƒv‚Ì‰Šú‰»‚âAƒQ[ƒ€ƒCƒxƒ“ƒg‚É‚æ‚Á‚ÄƒvƒŒƒCƒ„[‚ÌˆÊ’u‚ğ‹­§“I‚É•ÏX‚·‚éÛ‚ÉA
-// ‚»‚ÌˆÚ“®æ‚Ìƒm[ƒhî•ñ‚ğ‘¼‚ÌƒXƒNƒŠƒvƒg‚É’ñ‹Ÿ‚µ‚Ü‚·B
+// PlayerLocationSetter.cs 
+// ã“ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã¯ã€ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ãŒåˆæœŸä½ç½®ã¨ã—ã¦æŒ‡å®šã™ã¹ãMapNodeã®æƒ…å ±ã‚’å–å¾—ã™ã‚‹æ©Ÿèƒ½ã‚’æä¾›ã—ã¾ã™ã€‚
+// ãƒãƒƒãƒ—ã®åˆæœŸåŒ–æ™‚ã‚„ã€ã‚²ãƒ¼ãƒ ã‚¤ãƒ™ãƒ³ãƒˆã«ã‚ˆã£ã¦ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä½ç½®ã‚’å¼·åˆ¶çš„ã«å¤‰æ›´ã™ã‚‹éš›ã«ã€
+// ãã®ç§»å‹•å…ˆã®ãƒãƒ¼ãƒ‰æƒ…å ±ã‚’ä»–ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã«æä¾›ã—ã¾ã™ã€‚
 
 using UnityEngine;
-using UnityEngine.UI; // RectTransform‚ğg—p‚·‚é‚½‚ß‚É•K—v
+using UnityEngine.UI; // RectTransformã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚ã«å¿…è¦
 
 public class PlayerLocationSetter : MonoBehaviour
 {
-    // ‚±‚ÌƒXƒNƒŠƒvƒg©‘Ì‚ÍƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ÌRectTransform‚ğ’¼Ú‘€ì‚µ‚È‚¢‚½‚ßAQÆ‚Í•s—v‚É‚È‚è‚Ü‚·B
-    // ‚»‚Ì‘ã‚í‚èA•K—v‚Èƒm[ƒh‚Ìî•ñ‚ğ•Ô‚·Œ`‚É‚µ‚Ü‚·B
+    // ã“ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆè‡ªä½“ã¯ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã®RectTransformã‚’ç›´æ¥æ“ä½œã—ãªã„ãŸã‚ã€å‚ç…§ã¯ä¸è¦ã«ãªã‚Šã¾ã™ã€‚
+    // ãã®ä»£ã‚ã‚Šã€å¿…è¦ãªãƒãƒ¼ãƒ‰ã®æƒ…å ±ã‚’è¿”ã™å½¢ã«ã—ã¾ã™ã€‚
 
     /// <summary>
-    /// w’è‚³‚ê‚½MapNode‚Ìî•ñ‚ğæ“¾‚µ‚Ü‚·B
-    /// ‚±‚Ìƒƒ\ƒbƒh‚ÍŠO•”i—á: MapInteractionHandler‚âƒQ[ƒ€ƒCƒxƒ“ƒgƒXƒNƒŠƒvƒgj‚©‚çŒÄ‚Ño‚³‚êA
-    /// ‚»‚Ìƒm[ƒh‚ÌˆÊ’uî•ñ‚ğg‚Á‚ÄƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ğ”z’u‚µ‚½‚èA‹“_‚ğ’²®‚µ‚½‚è‚·‚é‚½‚ß‚Ég‚í‚ê‚Ü‚·B
+    /// æŒ‡å®šã•ã‚ŒãŸMapNodeã®æƒ…å ±ã‚’å–å¾—ã—ã¾ã™ã€‚
+    /// ã“ã®ãƒ¡ã‚½ãƒƒãƒ‰ã¯å¤–éƒ¨ï¼ˆä¾‹: MapInteractionHandlerã‚„ã‚²ãƒ¼ãƒ ã‚¤ãƒ™ãƒ³ãƒˆã‚¹ã‚¯ãƒªãƒ—ãƒˆï¼‰ã‹ã‚‰å‘¼ã³å‡ºã•ã‚Œã€
+    /// ãã®ãƒãƒ¼ãƒ‰ã®ä½ç½®æƒ…å ±ã‚’ä½¿ã£ã¦ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã‚’é…ç½®ã—ãŸã‚Šã€è¦–ç‚¹ã‚’èª¿æ•´ã—ãŸã‚Šã™ã‚‹ãŸã‚ã«ä½¿ã‚ã‚Œã¾ã™ã€‚
     /// </summary>
-    /// <param name="targetNodeId">æ“¾‚µ‚½‚¢MapNode‚ÌIDB</param>
-    /// <returns>w’è‚³‚ê‚½ID‚ÌMapNode‚ÌRectTransformBŒ©‚Â‚©‚ç‚È‚¢ê‡‚ÍnullB</returns>
+    /// <param name="targetNodeId">å–å¾—ã—ãŸã„MapNodeã®IDã€‚</param>
+    /// <returns>æŒ‡å®šã•ã‚ŒãŸIDã®MapNodeã®RectTransformã€‚è¦‹ã¤ã‹ã‚‰ãªã„å ´åˆã¯nullã€‚</returns>
     public RectTransform GetTargetNodeRectTransform(string targetNodeId)
     {
         if (MapPathManager.Instance == null)
         {
-            Debug.LogError("[PlayerLocationSetter] MapPathManager‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñBƒV[ƒ“‚ÉMapPathManager‚ğƒAƒ^ƒbƒ`‚µ‚½GameObject‚ª‚ ‚é‚©Šm”F‚µ‚Ä‚­‚¾‚³‚¢B", this);
+            Debug.LogError("[PlayerLocationSetter] MapPathManagerã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚ã‚·ãƒ¼ãƒ³ã«MapPathManagerã‚’ã‚¢ã‚¿ãƒƒãƒã—ãŸGameObjectãŒã‚ã‚‹ã‹ç¢ºèªã—ã¦ãã ã•ã„ã€‚", this);
             return null;
         }
 
         MapNode targetNode = MapPathManager.Instance.GetNode(targetNodeId);
         if (targetNode != null)
         {
-            Debug.Log($"[PlayerLocationSetter] ƒm[ƒh '{targetNodeId}' ‚ÌˆÊ’uî•ñ‚ğæ“¾‚µ‚Ü‚µ‚½B");
+            Debug.Log($"[PlayerLocationSetter] ãƒãƒ¼ãƒ‰ '{targetNodeId}' ã®ä½ç½®æƒ…å ±ã‚’å–å¾—ã—ã¾ã—ãŸã€‚");
             return targetNode.GetComponent<RectTransform>();
         }
         else
         {
-            Debug.LogWarning($"[PlayerLocationSetter] w’è‚³‚ê‚½ƒm[ƒhID '{targetNodeId}' ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½B", this);
+            Debug.LogWarning($"[PlayerLocationSetter] æŒ‡å®šã•ã‚ŒãŸãƒãƒ¼ãƒ‰ID '{targetNodeId}' ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚", this);
             return null;
         }
     }
