@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const scriptCards = [
+        // 各スクリプトのRAWファイルのURLを指定します。
+        // 'Tomo-141'と'Lunatis'は、あなたのGitHubユーザー名とリポジトリ名に合わせてください。
+        // pathは、GitHubリポジトリ内での実際のファイルパスです。
         { id: 'script1', title: 'MapNodeData.cs', description: 'マップの各ノードのデータ構造を定義。', path: 'Assets/Scripts/Data/MapNodeData.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Map/MapNodeData.cs' },
         { id: 'script2', title: 'MapBoundsClamper.cs', description: 'マップの境界内でのオブジェクト位置を制限。', path: 'Assets/Scripts/Map/MapBoundsClamper.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Map/MapBoundsClamper.cs' },
         { id: 'script3', title: 'MapInteractionHandler.cs', description: 'マップ上のインタラクションを処理。', path: 'Assets/Scripts/Map/MapInteractionHandler.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Map/MapInteractionHandler.cs' },
@@ -61,25 +64,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="code-block-container">
                     <div class="code-filename">${cardData.path}</div>
                     <button class="copy-button" data-copy-target="code-display">コピー</button>
-                    <pre><code id="code-display" class="language-csharp">${escapeHtml(codeContent)}</code></pre>
+                    <pre><code id="code-display">${escapeHtml(codeContent)}</code></pre>
                 </div>
             `;
             areaB.innerHTML = `<h2>選択された詳細情報</h2>${detailHtml}`;
-
-            // highlight.jsを適用
-            // `code-display`は動的に生成されるため、要素を取得してハイライトを適用
-            const codeElement = document.getElementById('code-display');
-            if (codeElement) {
-                hljs.highlightElement(codeElement); // 変更点：highlightAll()ではなくhighlightElement()を使う
-            }
 
             // コピーボタンのイベントリスナーを設定
             areaB.querySelectorAll('.copy-button').forEach(button => {
                 button.addEventListener('click', () => {
                     const targetId = button.dataset.copyTarget;
-                    const codeElementForCopy = document.getElementById(targetId); // コピー用の要素を取得
-                    if (codeElementForCopy) {
-                        const codeToCopy = codeElementForCopy.innerText; // <pre><code>の内容を取得
+                    const codeElement = document.getElementById(targetId);
+                    if (codeElement) {
+                        const codeToCopy = codeElement.innerText; // <pre><code>の内容を取得
                         navigator.clipboard.writeText(codeToCopy).then(() => {
                             button.textContent = 'コピーしました！';
                             setTimeout(() => {
