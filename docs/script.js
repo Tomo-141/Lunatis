@@ -14,12 +14,19 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const scriptCards = [
-        { id: 'script1', title: 'PlayerController.cs', description: 'プレイヤーの移動と操作を制御するスクリプト。', path: 'Assets/Scripts/Player/PlayerController.cs', content: '<h3>PlayerController.cs のコード</h3><div class="code-block-container"><div class="code-filename">Assets/Scripts/Player/PlayerController.cs</div><button class="copy-button" data-copy-target="code-script1">コピー</button><pre><code id="code-script1">// PlayerController.cs\npublic class PlayerController : MonoBehaviour\n{\n    public float moveSpeed = 5f;\n    void Update()\n    {\n        // 移動ロジック\n        float horizontal = Input.GetAxis("Horizontal");\n        float vertical = Input.GetAxis("Vertical");\n        transform.position += new Vector3(horizontal, 0, vertical) * moveSpeed * Time.deltaTime;\n    }\n}</code></pre></div>' },
-        { id: 'script2', title: 'MapGenerator.cs', description: 'ランダムなマップを生成するコアスクリプト。', path: 'Assets/Scripts/Map/MapGenerator.cs', content: '<h3>MapGenerator.cs のコード</h3><div class="code-block-container"><div class="code-filename">Assets/Scripts/Map/MapGenerator.cs</div><button class="copy-button" data-copy-target="code-script2">コピー</button><pre><code id="code-script2">// MapGenerator.cs\npublic class MapGenerator : MonoBehaviour\n{\n    public int mapWidth = 100;\n    public int mapHeight = 100;\n    void Start()\n    {\n        GenerateMap();\n    }\n    void GenerateMap()\n    {\n        // マップ生成ロジック\n        Debug.Log("Map Generated!");\n    }\n}</code></pre></div>' },
-        { id: 'script3', title: 'CameraController.cs', description: 'プレイヤーに追従するカメラの動きを制御。', path: 'Assets/Scripts/Camera/CameraController.cs', content: '<h3>CameraController.cs のコード</h3><div class="code-block-container"><div class="code-filename">Assets/Scripts/Camera/CameraController.cs</div><button class="copy-button" data-copy-target="code-script3">コピー</button><pre><code id="code-script3">// CameraController.cs\npublic class CameraController : MonoBehaviour\n{\n    public Transform target;\n    public Vector3 offset;\n    void LateUpdate()\n    {\n        if (target != null)\n        {\n            transform.position = target.position + offset;\n        }\n    }\n}</code></pre></div>' },
-        { id: 'script4', title: 'ItemManager.cs', description: 'ゲーム内のアイテムの管理とインベントリ処理。', path: 'Assets/Scripts/GameSystem/ItemManager.cs', content: '<h3>ItemManager.cs のコード</h3><div class="code-block-container"><div class="code-filename">Assets/Scripts/GameSystem/ItemManager.cs</div><button class="copy-button" data-copy-target="code-script4">コピー</button><pre><code id="code-script4">// ItemManager.cs\npublic class ItemManager : MonoBehaviour\n{\n    public List&lt;string&gt; inventory = new List&lt;string&gt;();\n    public void AddItem(string itemName)\n    {\n        inventory.Add(itemName);\n        Debug.Log(itemName + " added to inventory.");\n    }\n}</code></pre></div>' },
-        { id: 'script5', title: 'AudioManager.cs', description: 'ゲーム内のBGMや効果音の再生管理。', path: 'Assets/Scripts/Audio/AudioManager.cs', content: '<h3>AudioManager.cs のコード</h3><div class="code-block-container"><div class="code-filename">Assets/Scripts/Audio/AudioManager.cs</div><button class="copy-button" data-copy-target="code-script5">コピー</button><pre><code id="code-script5">// AudioManager.cs\npublic class AudioManager : MonoBehaviour\n{\n    public AudioClip BGM;\n    public AudioClip SFX;\n    void Start()\n    {\n        // BGM再生\n    }\n    public void PlaySFX(AudioClip clip)\n    {\n        // 効果音再生\n    }\n}</code></pre></div>' }
+        // 各スクリプトのRAWファイルのURLを指定します。
+        // 'Tomo-141'と'Lunatis'は、あなたのGitHubユーザー名とリポジトリ名に合わせてください。
+        // pathは、GitHubリポジトリ内での実際のファイルパスです。
+        { id: 'script1', title: 'MapNodeData.cs', description: 'マップの各ノードのデータ構造を定義。', path: 'Assets/Scripts/Data/MapNodeData.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Data/MapNodeData.cs' },
+        { id: 'script2', title: 'MapBoundsClamper.cs', description: 'マップの境界内でのオブジェクト位置を制限。', path: 'Assets/Scripts/Map/MapBoundsClamper.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Map/MapBoundsClamper.cs' },
+        { id: 'script3', title: 'MapInteractionHandler.cs', description: 'マップ上のインタラクションを処理。', path: 'Assets/Scripts/Map/MapInteractionHandler.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Map/MapInteractionHandler.cs' },
+        { id: 'script4', title: 'MapNode.cs', description: '個々のマップノードの振る舞いを定義。', path: 'Assets/Scripts/Map/MapNode.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Map/MapNode.cs' },
+        { id: 'script5', title: 'MapPathManager.cs', description: 'マップ内のパス探索と管理。', path: 'Assets/Scripts/Map/MapPathManager.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Map/MapPathManager.cs' },
+        { id: 'script6', title: 'MapZoomController.cs', description: 'マップのズームレベルを制御。', path: 'Assets/Scripts/Map/MapZoomController.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Map/MapZoomController.cs' },
+        { id: 'script7', title: 'PlayerMapMovementController.cs', description: 'プレイヤーのマップ上での移動を制御。', path: 'Assets/Scripts/PlayerMap/PlayerMapMovementController.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/PlayerMap/PlayerMapMovementController.cs' },
+        { id: 'script8', title: 'PlayerLocationSetter.cs', description: 'プレイヤーのマップ上の初期位置設定ツール。', path: 'Assets/Scripts/Tools/PlayerLocationSetter.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Tools/PlayerLocationSetter.cs' }
     ];
+
 
     // --- カード表示の関数 (変更なし) ---
     function renderCards(targetElement, cardsData) {
@@ -42,30 +49,59 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 詳細コンテンツ表示の関数 (変更あり) ---
-    function renderDetailContent(contentHtml) {
-        areaB.innerHTML = `<h2>選択された詳細情報</h2>${contentHtml}`;
+    async function renderDetailContent(cardData) {
+        areaB.innerHTML = `<h2>選択された詳細情報</h2><p>コードを読み込み中...</p>`; // ローディング表示
 
-        // コピーボタンのイベントリスナーを設定
-        areaB.querySelectorAll('.copy-button').forEach(button => {
-            button.addEventListener('click', () => {
-                const targetId = button.dataset.copyTarget;
-                const codeElement = document.getElementById(targetId);
-                if (codeElement) {
-                    const codeToCopy = codeElement.innerText; // <pre><code>の内容を取得
-                    navigator.clipboard.writeText(codeToCopy).then(() => {
-                        button.textContent = 'コピーしました！';
-                        setTimeout(() => {
-                            button.textContent = 'コピー';
-                        }, 2000); // 2秒後に元に戻す
-                    }).catch(err => {
-                        console.error('コピーに失敗しました:', err);
-                        alert('コードのコピーに失敗しました。ブラウザのセキュリティ設定をご確認ください。');
-                    });
-                }
+        try {
+            const response = await fetch(cardData.rawUrl);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const codeContent = await response.text();
+
+            const detailHtml = `
+                <h3>${cardData.title} のコード</h3>
+                <div class="code-block-container">
+                    <div class="code-filename">${cardData.path}</div>
+                    <button class="copy-button" data-copy-target="code-display">コピー</button>
+                    <pre><code id="code-display">${escapeHtml(codeContent)}</code></pre>
+                </div>
+            `;
+            areaB.innerHTML = `<h2>選択された詳細情報</h2>${detailHtml}`;
+
+            // コピーボタンのイベントリスナーを設定
+            areaB.querySelectorAll('.copy-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.copyTarget;
+                    const codeElement = document.getElementById(targetId);
+                    if (codeElement) {
+                        const codeToCopy = codeElement.innerText; // <pre><code>の内容を取得
+                        navigator.clipboard.writeText(codeToCopy).then(() => {
+                            button.textContent = 'コピーしました！';
+                            setTimeout(() => {
+                                button.textContent = 'コピー';
+                            }, 2000); // 2秒後に元に戻す
+                        }).catch(err => {
+                            console.error('コピーに失敗しました:', err);
+                            alert('コードのコピーに失敗しました。ブラウザのセキュリティ設定をご確認ください。');
+                        });
+                    }
+                });
             });
-        });
 
-        areaB.scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            console.error('スクリプトの読み込みに失敗しました:', error);
+            areaB.innerHTML = `<h2>選択された詳細情報</h2><p>コードの読み込み中にエラーが発生しました。</p><p>エラー詳細: ${error.message}</p>`;
+        } finally {
+            areaB.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    // HTMLエンティティをエスケープするヘルパー関数
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(text));
+        return div.innerHTML;
     }
 
     // --- 初期表示: 更新情報カード (変更なし) ---
@@ -95,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         areaB.innerHTML = '<h2>詳細情報表示エリア</h2><p>ここに選択されたスクリプトのコードや詳細が表示されます。</p>';
     });
 
-    // --- カードクリックイベントの委譲 (変更なし) ---
+    // --- カードクリックイベントの委譲 (変更あり) ---
     areaA.addEventListener('click', (e) => {
         const cardLink = e.target.closest('.card-link');
         if (cardLink) {
@@ -103,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const cardId = cardLink.dataset.cardId;
             const selectedScript = scriptCards.find(card => card.id === cardId);
             if (selectedScript) {
-                renderDetailContent(selectedScript.content);
+                renderDetailContent(selectedScript); // ここでcardDataオブジェクト全体を渡す
             }
         }
     });
