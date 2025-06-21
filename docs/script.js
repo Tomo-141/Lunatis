@@ -14,10 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const scriptCards = [
-        // 各スクリプトのRAWファイルのURLを指定します。
-        // 'Tomo-141'と'Lunatis'は、あなたのGitHubユーザー名とリポジトリ名に合わせてください。
-        // pathは、GitHubリポジトリ内での実際のファイルパスです。
-        { id: 'script1', title: 'MapNodeData.cs', description: 'マップの各ノードのデータ構造を定義。', path: 'Assets/Scripts/Data/MapNodeData.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Map/MapNodeData.cs' },
+        { id: 'script1', title: 'MapNodeData.cs', description: 'マップの各ノードのデータ構造を定義。', path: 'Assets/Scripts/Map/MapNodeData.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Map/MapNodeData.cs' },
         { id: 'script2', title: 'MapBoundsClamper.cs', description: 'マップの境界内でのオブジェクト位置を制限。', path: 'Assets/Scripts/Map/MapBoundsClamper.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Map/MapBoundsClamper.cs' },
         { id: 'script3', title: 'MapInteractionHandler.cs', description: 'マップ上のインタラクションを処理。', path: 'Assets/Scripts/Map/MapInteractionHandler.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Map/MapInteractionHandler.cs' },
         { id: 'script4', title: 'MapNode.cs', description: '個々のマップノードの振る舞いを定義。', path: 'Assets/Scripts/Map/MapNode.cs', rawUrl: 'https://raw.githubusercontent.com/Tomo-141/Lunatis/main/Assets/Scripts/Map/MapNode.cs' },
@@ -28,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
 
-    // --- カード表示の関数 (変更なし) ---
+    // --- カード表示の関数 ---
     function renderCards(targetElement, cardsData) {
         targetElement.innerHTML = '';
         const cardContainer = document.createElement('div');
@@ -48,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         targetElement.appendChild(cardContainer);
     }
 
-    // --- 詳細コンテンツ表示の関数 (変更あり) ---
+    // --- 詳細コンテンツ表示の関数 (ハイライト機能を追加) ---
     async function renderDetailContent(cardData) {
         areaB.innerHTML = `<h2>選択された詳細情報</h2><p>コードを読み込み中...</p>`; // ローディング表示
 
@@ -64,18 +61,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="code-block-container">
                     <div class="code-filename">${cardData.path}</div>
                     <button class="copy-button" data-copy-target="code-display">コピー</button>
-                    <pre><code id="code-display">${escapeHtml(codeContent)}</code></pre>
+                    <pre><code class="language-csharp" id="code-display">${escapeHtml(codeContent)}</code></pre>
                 </div>
             `;
             areaB.innerHTML = `<h2>選択された詳細情報</h2>${detailHtml}`;
+
+            // ★ ここから追加・修正 ★
+            // 動的に追加されたコードブロックをハイライトする
+            const codeElement = document.getElementById('code-display');
+            if (codeElement) {
+                // hljs.highlightElement() を呼び出すことで、この要素だけがハイライトされる
+                hljs.highlightElement(codeElement);
+            }
+            // ★ ここまで追加・修正 ★
+
 
             // コピーボタンのイベントリスナーを設定
             areaB.querySelectorAll('.copy-button').forEach(button => {
                 button.addEventListener('click', () => {
                     const targetId = button.dataset.copyTarget;
-                    const codeElement = document.getElementById(targetId);
-                    if (codeElement) {
-                        const codeToCopy = codeElement.innerText; // <pre><code>の内容を取得
+                    const codeElementToCopy = document.getElementById(targetId); // 変数名を明確化
+                    if (codeElementToCopy) {
+                        const codeToCopy = codeElementToCopy.innerText; // <pre><code>の内容を取得
                         navigator.clipboard.writeText(codeToCopy).then(() => {
                             button.textContent = 'コピーしました！';
                             setTimeout(() => {
@@ -104,14 +111,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return div.innerHTML;
     }
 
-    // --- 初期表示: 更新情報カード (変更なし) ---
+    // --- 初期表示: 更新情報カード ---
     function showHomePage() {
         areaA.innerHTML = '<h2>最新の更新情報</h2>';
         renderCards(areaA, updateCards);
         areaB.innerHTML = '<h2>詳細情報表示エリア</h2><p>ここに選択されたコンテンツの詳細が表示されます。</p>';
     }
 
-    // --- イベントリスナー (変更なし) ---
+    // --- イベントリスナー ---
     navHome.addEventListener('click', (e) => {
         e.preventDefault();
         showHomePage();
@@ -131,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         areaB.innerHTML = '<h2>詳細情報表示エリア</h2><p>ここに選択されたスクリプトのコードや詳細が表示されます。</p>';
     });
 
-    // --- カードクリックイベントの委譲 (変更なし) ---
+    // --- カードクリックイベントの委譲 ---
     areaA.addEventListener('click', (e) => {
         const cardLink = e.target.closest('.card-link');
         if (cardLink) {
@@ -139,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const cardId = cardLink.dataset.cardId;
             const selectedScript = scriptCards.find(card => card.id === cardId);
             if (selectedScript) {
-                renderDetailContent(selectedScript); // ここでcardDataオブジェクト全体を渡す
+                renderDetailContent(selectedScript);
             }
         }
     });
