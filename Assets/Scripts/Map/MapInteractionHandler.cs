@@ -1,334 +1,334 @@
-// MapInteractionHandler.cs
-// ‚±‚МѓXѓNѓЉѓvѓg‚НЃAѓ}ѓbѓvUI‚Й‘О‚·‚йѓ†Ѓ[ѓUЃ[‚М“ь—НЃiѓhѓ‰ѓbѓOЃAѓmЃ[ѓhѓNѓЉѓbѓNЃj‚рЊџЏo‚µЃA
-// ‚»‚к‚Й‰ћ‚¶‚ЅЏ€—ќЃiѓ}ѓbѓv‚МЋ‹“_€Ъ“®ЃAѓvѓЊѓCѓ„Ѓ[€Ъ“®—v‹ЃЃj‚рЉЦAѓRѓ“ѓ|Ѓ[ѓlѓ“ѓg‚Й”­Ќs‚µ‚Ь‚·ЃB
-// Ће‚Йѓ}ѓbѓv‚Мѓhѓ‰ѓbѓO‘ЂЌм‚ЖѓmЃ[ѓh‚МѓNѓЉѓbѓNЊџЏo‚р’S“–‚µ‚Ь‚·ЃB
-// ѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚Є€Ъ“®’†‚МЉФ‚НЃAѓ}ѓbѓv‚Мѓhѓ‰ѓbѓO‘ЂЌм‚р€кЋћ“I‚Й–іЊш‰»‚µЃAЊл“®Ќм‚р–h‚¬‚Ь‚·ЃB
+п»ї// MapInteractionHandler.cs 
+// гЃ“гЃ®г‚№г‚ЇгѓЄгѓ—гѓ€гЃЇгЂЃгѓћгѓѓгѓ—UIгЃ«еЇѕгЃ™г‚‹гѓ¦гѓјг‚¶гѓјгЃ®е…ҐеЉ›пј€гѓ‰гѓ©гѓѓг‚°гЂЃгѓЋгѓјгѓ‰г‚ЇгѓЄгѓѓг‚Їпј‰г‚’ж¤ње‡єгЃ—гЂЃ
+// гЃќг‚ЊгЃ«еїњгЃгЃџе‡¦зђ†пј€гѓћгѓѓгѓ—гЃ®и¦–з‚№з§»е‹•гЂЃгѓ—гѓ¬г‚¤гѓ¤гѓјз§»е‹•и¦Ѓж±‚пј‰г‚’й–ўйЂЈг‚ігѓігѓќгѓјгѓЌгѓігѓ€гЃ«з™єиЎЊгЃ—гЃѕгЃ™гЂ‚
+// дё»гЃ«гѓћгѓѓгѓ—гЃ®гѓ‰гѓ©гѓѓг‚°ж“ЌдЅњгЃЁгѓЋгѓјгѓ‰гЃ®г‚ЇгѓЄгѓѓг‚Їж¤ње‡єг‚’ж‹…еЅ“гЃ—гЃѕгЃ™гЂ‚
+// гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃЊз§»е‹•дё­гЃ®й–“гЃЇгЂЃгѓћгѓѓгѓ—гЃ®гѓ‰гѓ©гѓѓг‚°ж“ЌдЅњг‚’дёЂж™‚зљ„гЃ«з„ЎеЉ№еЊ–гЃ—гЂЃиЄ¤е‹•дЅњг‚’йІгЃЋгЃѕгЃ™гЂ‚
 
 using UnityEngine;
-using UnityEngine.EventSystems; // IDragHandler, IBeginDragHandler, IEndDragHandler ‚рЋg—p‚·‚й‚Ѕ‚Я‚Й•K—v
-using UnityEngine.UI; // RectTransform‚рЋg—p‚·‚й‚Ѕ‚Я‚Й•K—v
-using System.Collections; // ѓRѓ‹Ѓ[ѓ`ѓ“‚рЋg—p‚·‚й‚Ѕ‚Я‚Й•K—v
+using UnityEngine.EventSystems; // IDragHandler, IBeginDragHandler, IEndDragHandler г‚’дЅїз”ЁгЃ™г‚‹гЃџг‚ЃгЃ«еї…и¦Ѓ
+using UnityEngine.UI; // RectTransformг‚’дЅїз”ЁгЃ™г‚‹гЃџг‚ЃгЃ«еї…и¦Ѓ
+using System.Collections; // г‚ігѓ«гѓјгѓЃгѓіг‚’дЅїз”ЁгЃ™г‚‹гЃџг‚ЃгЃ«еї…и¦Ѓ
 
-// MapInteractionHandler‚НЃAѓ}ѓbѓv‚МЋ‹“_‘ЂЌмЃiѓZѓ“ѓ^ѓЉѓ“ѓOЃAѓhѓ‰ѓbѓOЃj‚ЖЃA
-// ѓmЃ[ѓhѓNѓЉѓbѓN‚МЊџЏo‚рЉЗ—ќ‚µ‚Ь‚·ЃB
-// IBeginDragHandler, IDragHandler, IEndDragHandler‚рЋА‘•‚·‚й‚±‚Ж‚ЕЃAUIѓCѓxѓ“ѓgѓVѓXѓeѓЂ‚р’К‚¶‚Дѓhѓ‰ѓbѓO‘ЂЌм‚рЊџЏo‚µ‚Ь‚·ЃB
-// ѓXѓNѓЉѓvѓg‚М“З‚ЭЌћ‚ЭЏ‡Џ‚Ж‚µ‚Д‚НЃAMapPathManager‚вPlayerMapMovementController‚ж‚иЊг‚ЙЋАЌs‚і‚к‚й‚±‚Ж‚р‘z’и‚µ‚Д‚ў‚Ь‚·ЃB
+// MapInteractionHandlerгЃЇгЂЃгѓћгѓѓгѓ—гЃ®и¦–з‚№ж“ЌдЅњпј€г‚»гѓіг‚їгѓЄгѓіг‚°гЂЃгѓ‰гѓ©гѓѓг‚°пј‰гЃЁгЂЃ
+// гѓЋгѓјгѓ‰г‚ЇгѓЄгѓѓг‚ЇгЃ®ж¤ње‡єг‚’з®Ўзђ†гЃ—гЃѕгЃ™гЂ‚
+// IBeginDragHandler, IDragHandler, IEndDragHandlerг‚’е®џиЈ…гЃ™г‚‹гЃ“гЃЁгЃ§гЂЃUIг‚¤гѓ™гѓігѓ€г‚·г‚№гѓ†гѓ г‚’йЂљгЃгЃ¦гѓ‰гѓ©гѓѓг‚°ж“ЌдЅњг‚’ж¤ње‡єгЃ—гЃѕгЃ™гЂ‚
+// г‚№г‚ЇгѓЄгѓ—гѓ€гЃ®иЄ­гЃїиѕјгЃїй †еєЏгЃЁгЃ—гЃ¦гЃЇгЂЃMapPathManagerг‚„PlayerMapMovementControllerг‚€г‚ЉеѕЊгЃ«е®џиЎЊгЃ•г‚Њг‚‹гЃ“гЃЁг‚’жѓіе®љгЃ—гЃ¦гЃ„гЃѕгЃ™гЂ‚
 public class MapInteractionHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("References")]
-    [SerializeField] private RectTransform worldMapRawImageRectTransform; // ѓЏЃ[ѓ‹ѓhѓ}ѓbѓv‚МRawImageЃi’nђ}‰ж‘њЃj‚МRectTransform
-    [SerializeField] private MapBoundsClamper mapBoundsClamper;         // ѓ}ѓbѓv‚Є‰ж–КЉO‚ЙЏo‚И‚ў‚ж‚¤‚Й‹«ЉE‚ЙѓNѓ‰ѓ“ѓv‚·‚й‚Ѕ‚Я‚МѓXѓNѓЉѓvѓg‚Ц‚МЋQЏЖ
-    [SerializeField] private PlayerMapMovementController playerMovementController; // ѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚М€Ъ“®Џу‘Ф‚в€К’uЏо•с‚рЋж“ѕ‚·‚й‚Ѕ‚Я‚МѓXѓNѓЉѓvѓg‚Ц‚МЋQЏЖ
+    [SerializeField] private RectTransform worldMapRawImageRectTransform; // гѓЇгѓјгѓ«гѓ‰гѓћгѓѓгѓ—гЃ®RawImageпј€ењ°е›із”»еѓЏпј‰гЃ®RectTransform
+    [SerializeField] private MapBoundsClamper mapBoundsClamper;         // гѓћгѓѓгѓ—гЃЊз”»йќўе¤–гЃ«е‡єгЃЄгЃ„г‚€гЃ†гЃ«еўѓз•ЊгЃ«г‚Їгѓ©гѓігѓ—гЃ™г‚‹гЃџг‚ЃгЃ®г‚№г‚ЇгѓЄгѓ—гѓ€гЃёгЃ®еЏ‚з…§
+    [SerializeField] private PlayerMapMovementController playerMovementController; // гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃ®з§»е‹•зЉ¶ж…‹г‚„дЅЌзЅ®жѓ…е ±г‚’еЏ–еѕ—гЃ™г‚‹гЃџг‚ЃгЃ®г‚№г‚ЇгѓЄгѓ—гѓ€гЃёгЃ®еЏ‚з…§
 
     [Header("Drag Settings")]
-    [SerializeField] private float dragSpeed = 1.0f; // ѓ}ѓbѓv‚рѓhѓ‰ѓbѓO‚·‚йЌЫ‚М‘¬“xЊWђ”
+    [SerializeField] private float dragSpeed = 1.0f; // гѓћгѓѓгѓ—г‚’гѓ‰гѓ©гѓѓг‚°гЃ™г‚‹йљ›гЃ®йЂџеє¦дї‚ж•°
 
     [Header("Centering Settings")]
-    [Tooltip("ѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚ЙЋ‹“_‚рѓZѓ“ѓ^ѓЉѓ“ѓO‚·‚йЌЫ‚М‘¬“xЃB")]
-    [SerializeField] private float centerSpeed = 5.0f; // ѓZѓ“ѓ^ѓЉѓ“ѓOѓAѓjѓЃЃ[ѓVѓ‡ѓ“‚М‘¬“x
-    [Tooltip("ѓZѓ“ѓ^ѓЉѓ“ѓOѓAѓjѓЃЃ[ѓVѓ‡ѓ“‚МЌЕ‘еЊp‘±ЋћЉФЃi•bЃjЃB‚±‚к‚р‰Я‚¬‚й‚Ж‹­ђ§ЏI—№ЃB")]
-    [SerializeField] private float maxCenteringDuration = 1.0f; // ѓZѓ“ѓ^ѓЉѓ“ѓO‚МЌЕ‘еЊp‘±ЋћЉФ (1•b)
-    [Tooltip("ѓZѓ“ѓ^ѓЉѓ“ѓOЏI—№‚Ж”»’и‚·‚й‹——Ј‚Ми‡’lЃB‚±‚М’l€И‰є‚Й‚И‚к‚ОѓZѓ“ѓ^ѓЉѓ“ѓO‚ЄЏI—№‚µ‚Ь‚·ЃB")]
-    [SerializeField] private float centeringThreshold = 0.5f; // ѓZѓ“ѓ^ѓЉѓ“ѓO‚МЊлЌ·‹–—e”Н€Н
+    [Tooltip("гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃ«и¦–з‚№г‚’г‚»гѓіг‚їгѓЄгѓіг‚°гЃ™г‚‹йљ›гЃ®йЂџеє¦гЂ‚")]
+    [SerializeField] private float centerSpeed = 5.0f; // г‚»гѓіг‚їгѓЄгѓіг‚°г‚ўгѓ‹гѓЎгѓјг‚·гѓ§гѓігЃ®йЂџеє¦
+    [Tooltip("г‚»гѓіг‚їгѓЄгѓіг‚°г‚ўгѓ‹гѓЎгѓјг‚·гѓ§гѓігЃ®жњЂе¤§з¶™з¶љж™‚й–“пј€з§’пј‰гЂ‚гЃ“г‚Њг‚’йЃЋгЃЋг‚‹гЃЁеј·е€¶зµ‚дє†гЂ‚")]
+    [SerializeField] private float maxCenteringDuration = 1.0f; // г‚»гѓіг‚їгѓЄгѓіг‚°гЃ®жњЂе¤§з¶™з¶љж™‚й–“ (1з§’)
+    [Tooltip("г‚»гѓіг‚їгѓЄгѓіг‚°зµ‚дє†гЃЁе€¤е®љгЃ™г‚‹и·ќй›ўгЃ®й–ѕеЂ¤гЂ‚гЃ“гЃ®еЂ¤д»Ґдё‹гЃ«гЃЄг‚ЊгЃ°г‚»гѓіг‚їгѓЄгѓіг‚°гЃЊзµ‚дє†гЃ—гЃѕгЃ™гЂ‚")]
+    [SerializeField] private float centeringThreshold = 0.5f; // г‚»гѓіг‚їгѓЄгѓіг‚°гЃ®иЄ¤е·®иЁ±е®№зЇ„е›І
 
-    private Vector2 lastMousePosition; // ѓhѓ‰ѓbѓOЉJЋnЋћ‚Мѓ}ѓEѓX€К’uЃA‚Ь‚Ѕ‚Н‘OѓtѓЊЃ[ѓЂ‚Мѓ}ѓEѓX€К’u‚р•ЫЋќ
-    private bool isDragging = false;   // Њ»ЌЭѓhѓ‰ѓbѓO‘ЂЌм’†‚©‚З‚¤‚©‚рЋ¦‚·ѓtѓ‰ѓO
-    private Coroutine centeringCoroutine; // ѓZѓ“ѓ^ѓЉѓ“ѓOѓAѓjѓЃЃ[ѓVѓ‡ѓ“‚рЋАЌs’†‚МѓRѓ‹Ѓ[ѓ`ѓ“‚Ц‚МЋQЏЖ‚р•ЫЋќЃiЏd•ЎЋАЌs–hЋ~‚М‚Ѕ‚ЯЃj
+    private Vector2 lastMousePosition; // гѓ‰гѓ©гѓѓг‚°й–‹е§‹ж™‚гЃ®гѓћг‚¦г‚№дЅЌзЅ®гЂЃгЃѕгЃџгЃЇе‰Ќгѓ•гѓ¬гѓјгѓ гЃ®гѓћг‚¦г‚№дЅЌзЅ®г‚’дїќжЊЃ
+    private bool isDragging = false;   // зЏѕењЁгѓ‰гѓ©гѓѓг‚°ж“ЌдЅњдё­гЃ‹гЃ©гЃ†гЃ‹г‚’з¤єгЃ™гѓ•гѓ©г‚°
+    private Coroutine centeringCoroutine; // г‚»гѓіг‚їгѓЄгѓіг‚°г‚ўгѓ‹гѓЎгѓјг‚·гѓ§гѓіг‚’е®џиЎЊдё­гЃ®г‚ігѓ«гѓјгѓЃгѓігЃёгЃ®еЏ‚з…§г‚’дїќжЊЃпј€й‡Ќи¤‡е®џиЎЊйІж­ўгЃ®гЃџг‚Ѓпј‰
 
     /// <summary>
-    /// ѓXѓNѓЉѓvѓg‚Є—LЊш‚Й‚И‚Б‚Ѕ‚Ж‚«‚Й€к“x‚ѕ‚ЇЊД‚СЏo‚і‚к‚Ь‚·ЃB
-    /// ‚±‚±‚ЕMapNode‚ЄѓNѓЉѓbѓN‚і‚к‚ЅЌЫ‚ЙЊД‚СЏo‚і‚к‚йѓCѓxѓ“ѓgЃiOnNodeClickedЃj‚МЌw“З‚рЉJЋn‚µ‚Ь‚·ЃB
-    /// ‚±‚к‚Й‚ж‚иЃAѓ}ѓbѓvЏг‚МѓmЃ[ѓh‚ЄѓNѓЉѓbѓN‚і‚к‚ЅЌЫ‚ЙHandleNodeClickѓЃѓ\ѓbѓh‚ЄЋАЌs‚і‚к‚Ь‚·ЃB
+    /// г‚№г‚ЇгѓЄгѓ—гѓ€гЃЊжњ‰еЉ№гЃ«гЃЄгЃЈгЃџгЃЁгЃЌгЃ«дёЂеє¦гЃ гЃ‘е‘јгЃіе‡єгЃ•г‚ЊгЃѕгЃ™гЂ‚
+    /// гЃ“гЃ“гЃ§MapNodeгЃЊг‚ЇгѓЄгѓѓг‚ЇгЃ•г‚ЊгЃџйљ›гЃ«е‘јгЃіе‡єгЃ•г‚Њг‚‹г‚¤гѓ™гѓігѓ€пј€OnNodeClickedпј‰гЃ®иіјиЄ­г‚’й–‹е§‹гЃ—гЃѕгЃ™гЂ‚
+    /// гЃ“г‚ЊгЃ«г‚€г‚ЉгЂЃгѓћгѓѓгѓ—дёЉгЃ®гѓЋгѓјгѓ‰гЃЊг‚ЇгѓЄгѓѓг‚ЇгЃ•г‚ЊгЃџйљ›гЃ«HandleNodeClickгѓЎг‚Ѕгѓѓгѓ‰гЃЊе®џиЎЊгЃ•г‚ЊгЃѕгЃ™гЂ‚
     /// </summary>
     void OnEnable()
     {
-        // MapNode.OnNodeClickedѓCѓxѓ“ѓg‚ЙHandleNodeClickѓЃѓ\ѓbѓh‚р“o^‚µ‚Ь‚·ЃB
+        // MapNode.OnNodeClickedг‚¤гѓ™гѓігѓ€гЃ«HandleNodeClickгѓЎг‚Ѕгѓѓгѓ‰г‚’з™»йЊІгЃ—гЃѕгЃ™гЂ‚
         MapNode.OnNodeClicked += HandleNodeClick;
-        Debug.Log("[MapInteractionHandler] MapNode.OnNodeClicked ѓCѓxѓ“ѓg‚МЌw“З‚рЉJЋn‚µ‚Ь‚µ‚ЅЃB");
+        Debug.Log("[MapInteractionHandler] MapNode.OnNodeClicked г‚¤гѓ™гѓігѓ€гЃ®иіјиЄ­г‚’й–‹е§‹гЃ—гЃѕгЃ—гЃџгЂ‚");
     }
 
     /// <summary>
-    /// ѓXѓNѓЉѓvѓg‚Є–іЊш‚Й‚И‚Б‚Ѕ‚Ж‚«‚Й€к“x‚ѕ‚ЇЊД‚СЏo‚і‚к‚Ь‚·ЃB
-    /// ‚±‚к‚НѓЃѓ‚ѓЉѓЉЃ[ѓN‚р–h‚®‚Ѕ‚Я‚Й”сЏн‚ЙЏd—v‚Е‚·ЃB
-    /// ‚±‚±‚ЕѓmЃ[ѓhѓNѓЉѓbѓNѓCѓxѓ“ѓg‚МЌw“З‚р‰рЏњ‚µ‚Ь‚·ЃB
+    /// г‚№г‚ЇгѓЄгѓ—гѓ€гЃЊз„ЎеЉ№гЃ«гЃЄгЃЈгЃџгЃЁгЃЌгЃ«дёЂеє¦гЃ гЃ‘е‘јгЃіе‡єгЃ•г‚ЊгЃѕгЃ™гЂ‚
+    /// гЃ“г‚ЊгЃЇгѓЎгѓўгѓЄгѓЄгѓјг‚Їг‚’йІгЃђгЃџг‚ЃгЃ«йќћеёёгЃ«й‡Ќи¦ЃгЃ§гЃ™гЂ‚
+    /// гЃ“гЃ“гЃ§гѓЋгѓјгѓ‰г‚ЇгѓЄгѓѓг‚Їг‚¤гѓ™гѓігѓ€гЃ®иіјиЄ­г‚’и§Јй™¤гЃ—гЃѕгЃ™гЂ‚
     /// </summary>
     void OnDisable()
     {
-        // MapNode.OnNodeClickedѓCѓxѓ“ѓg‚©‚зHandleNodeClickѓЃѓ\ѓbѓh‚М“o^‚р‰рЏњ‚µ‚Ь‚·ЃB
+        // MapNode.OnNodeClickedг‚¤гѓ™гѓігѓ€гЃ‹г‚‰HandleNodeClickгѓЎг‚Ѕгѓѓгѓ‰гЃ®з™»йЊІг‚’и§Јй™¤гЃ—гЃѕгЃ™гЂ‚
         MapNode.OnNodeClicked -= HandleNodeClick;
-        Debug.Log("[MapInteractionHandler] MapNode.OnNodeClicked ѓCѓxѓ“ѓg‚МЌw“З‚р‰рЏњ‚µ‚Ь‚µ‚ЅЃB");
+        Debug.Log("[MapInteractionHandler] MapNode.OnNodeClicked г‚¤гѓ™гѓігѓ€гЃ®иіјиЄ­г‚’и§Јй™¤гЃ—гЃѕгЃ—гЃџгЂ‚");
 
-        // ѓXѓNѓЉѓvѓg‚Є–іЊш‚Й‚И‚йЌЫ‚ЙЃA‚а‚µѓZѓ“ѓ^ѓЉѓ“ѓOѓRѓ‹Ѓ[ѓ`ѓ“‚ЄЋАЌs’†‚Е‚ ‚к‚О’вЋ~‚µ‚Ь‚·ЃB
+        // г‚№г‚ЇгѓЄгѓ—гѓ€гЃЊз„ЎеЉ№гЃ«гЃЄг‚‹йљ›гЃ«гЂЃг‚‚гЃ—г‚»гѓіг‚їгѓЄгѓіг‚°г‚ігѓ«гѓјгѓЃгѓігЃЊе®џиЎЊдё­гЃ§гЃ‚г‚ЊгЃ°еЃњж­ўгЃ—гЃѕгЃ™гЂ‚
         if (centeringCoroutine != null)
         {
             StopCoroutine(centeringCoroutine);
             centeringCoroutine = null;
-            Debug.Log("[MapInteractionHandler] OnDisableЋћЃAЋАЌs’†‚МѓZѓ“ѓ^ѓЉѓ“ѓOѓRѓ‹Ѓ[ѓ`ѓ“‚р’вЋ~‚µ‚Ь‚µ‚ЅЃB");
+            Debug.Log("[MapInteractionHandler] OnDisableж™‚гЂЃе®џиЎЊдё­гЃ®г‚»гѓіг‚їгѓЄгѓіг‚°г‚ігѓ«гѓјгѓЃгѓіг‚’еЃњж­ўгЃ—гЃѕгЃ—гЃџгЂ‚");
         }
     }
 
     /// <summary>
-    /// Start‚НѓXѓNѓЉѓvѓg‚ЄѓЌЃ[ѓh‚і‚кЃAЌЕЏ‰‚МѓtѓЊЃ[ѓЂЌXђV‚М‘O‚Й€к“x‚ѕ‚ЇЊД‚СЏo‚і‚к‚Ь‚·ЃB
-    /// •K—v‚ИѓRѓ“ѓ|Ѓ[ѓlѓ“ѓg‚МЋQЏЖ‚ЄInspector‚ЕђЭ’и‚і‚к‚Д‚ў‚й‚©‚рЉm”F‚µЃA
-    /// ѓvѓЌѓWѓFѓNѓgЉJЋnЋћ‚ЙѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚ЦЋ‹“_‚р‘¦ЋћѓZѓ“ѓ^ѓЉѓ“ѓO‚µ‚Ь‚·ЃB
+    /// StartгЃЇг‚№г‚ЇгѓЄгѓ—гѓ€гЃЊгѓ­гѓјгѓ‰гЃ•г‚ЊгЂЃжњЂе€ќгЃ®гѓ•гѓ¬гѓјгѓ ж›ґж–°гЃ®е‰ЌгЃ«дёЂеє¦гЃ гЃ‘е‘јгЃіе‡єгЃ•г‚ЊгЃѕгЃ™гЂ‚
+    /// еї…и¦ЃгЃЄг‚ігѓігѓќгѓјгѓЌгѓігѓ€гЃ®еЏ‚з…§гЃЊInspectorгЃ§иЁ­е®љгЃ•г‚ЊгЃ¦гЃ„г‚‹гЃ‹г‚’зўєиЄЌгЃ—гЂЃ
+    /// гѓ—гѓ­г‚ёг‚§г‚Їгѓ€й–‹е§‹ж™‚гЃ«гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃёи¦–з‚№г‚’еЌіж™‚г‚»гѓіг‚їгѓЄгѓіг‚°гЃ—гЃѕгЃ™гЂ‚
     /// </summary>
     void Start()
     {
-        // ѓYЃ[ѓЂ‘ОЏЫ‚МѓЏЃ[ѓ‹ѓhѓ}ѓbѓvRectTransform‚ЄInspector‚ЕѓAѓTѓCѓ“‚і‚к‚Д‚ў‚й‚©‚рЉm”F‚µ‚Ь‚·ЃB
+        // г‚єгѓјгѓ еЇѕи±ЎгЃ®гѓЇгѓјгѓ«гѓ‰гѓћгѓѓгѓ—RectTransformгЃЊInspectorгЃ§г‚ўг‚µг‚¤гѓігЃ•г‚ЊгЃ¦гЃ„г‚‹гЃ‹г‚’зўєиЄЌгЃ—гЃѕгЃ™гЂ‚
         if (worldMapRawImageRectTransform == null)
         {
-            Debug.LogError("[MapInteractionHandler] World Map Raw Image Rect Transform‚ЄѓAѓTѓCѓ“‚і‚к‚Д‚ў‚Ь‚№‚сЃIInspector‚ЕђЭ’и‚µ‚Д‚­‚ѕ‚і‚ўЃB", this);
-            enabled = false; // ѓAѓTѓCѓ“‚і‚к‚Д‚ў‚И‚ўЏкЌ‡‚НѓXѓNѓЉѓvѓg‚р–іЊш‰»‚µЃA‚±‚к€ИЏгЏ€—ќ‚Єђi‚Ь‚И‚ў‚ж‚¤‚Й‚µ‚Ь‚·ЃB
+            Debug.LogError("[MapInteractionHandler] World Map Raw Image Rect TransformгЃЊг‚ўг‚µг‚¤гѓігЃ•г‚ЊгЃ¦гЃ„гЃѕгЃ›г‚“пјЃInspectorгЃ§иЁ­е®љгЃ—гЃ¦гЃЏгЃ гЃ•гЃ„гЂ‚", this);
+            enabled = false; // г‚ўг‚µг‚¤гѓігЃ•г‚ЊгЃ¦гЃ„гЃЄгЃ„е ґеђ€гЃЇг‚№г‚ЇгѓЄгѓ—гѓ€г‚’з„ЎеЉ№еЊ–гЃ—гЂЃгЃ“г‚Њд»ҐдёЉе‡¦зђ†гЃЊйЂІгЃѕгЃЄгЃ„г‚€гЃ†гЃ«гЃ—гЃѕгЃ™гЂ‚
             return;
         }
-        // ѓ}ѓbѓv‹«ЉEѓNѓ‰ѓ“ѓv—pѓXѓNѓЉѓvѓg‚Ц‚МЋQЏЖ‚ЄInspector‚ЕѓAѓTѓCѓ“‚і‚к‚Д‚ў‚й‚©‚рЉm”F‚µ‚Ь‚·ЃB
+        // гѓћгѓѓгѓ—еўѓз•Њг‚Їгѓ©гѓігѓ—з”Ёг‚№г‚ЇгѓЄгѓ—гѓ€гЃёгЃ®еЏ‚з…§гЃЊInspectorгЃ§г‚ўг‚µг‚¤гѓігЃ•г‚ЊгЃ¦гЃ„г‚‹гЃ‹г‚’зўєиЄЌгЃ—гЃѕгЃ™гЂ‚
         if (mapBoundsClamper == null)
         {
-            Debug.LogError("[MapInteractionHandler] Map Bounds Clamper‚ЄѓAѓTѓCѓ“‚і‚к‚Д‚ў‚Ь‚№‚сЃIInspector‚ЕђЭ’и‚µ‚Д‚­‚ѕ‚і‚ўЃB", this);
-            enabled = false; // ѓAѓTѓCѓ“‚і‚к‚Д‚ў‚И‚ўЏкЌ‡‚НѓXѓNѓЉѓvѓg‚р–іЊш‰»‚µЃA‚±‚к€ИЏгЏ€—ќ‚Єђi‚Ь‚И‚ў‚ж‚¤‚Й‚µ‚Ь‚·ЃB
+            Debug.LogError("[MapInteractionHandler] Map Bounds ClamperгЃЊг‚ўг‚µг‚¤гѓігЃ•г‚ЊгЃ¦гЃ„гЃѕгЃ›г‚“пјЃInspectorгЃ§иЁ­е®љгЃ—гЃ¦гЃЏгЃ гЃ•гЃ„гЂ‚", this);
+            enabled = false; // г‚ўг‚µг‚¤гѓігЃ•г‚ЊгЃ¦гЃ„гЃЄгЃ„е ґеђ€гЃЇг‚№г‚ЇгѓЄгѓ—гѓ€г‚’з„ЎеЉ№еЊ–гЃ—гЂЃгЃ“г‚Њд»ҐдёЉе‡¦зђ†гЃЊйЂІгЃѕгЃЄгЃ„г‚€гЃ†гЃ«гЃ—гЃѕгЃ™гЂ‚
             return;
         }
-        // ѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“€Ъ“®ђ§ЊдѓXѓNѓЉѓvѓg‚Ц‚МЋQЏЖ‚ЄInspector‚ЕѓAѓTѓCѓ“‚і‚к‚Д‚ў‚й‚©‚рЉm”F‚µ‚Ь‚·ЃB
-        // ‚±‚к‚Є‚И‚ў‚ЖЃAѓvѓЊѓCѓ„Ѓ[€Ъ“®’†‚Мѓhѓ‰ѓbѓO–іЊш‰»‚вѓZѓ“ѓ^ѓЉѓ“ѓO‹@”\‚Є“®Ќм‚µ‚Ь‚№‚сЃB
+        // гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓіз§»е‹•е€¶еѕЎг‚№г‚ЇгѓЄгѓ—гѓ€гЃёгЃ®еЏ‚з…§гЃЊInspectorгЃ§г‚ўг‚µг‚¤гѓігЃ•г‚ЊгЃ¦гЃ„г‚‹гЃ‹г‚’зўєиЄЌгЃ—гЃѕгЃ™гЂ‚
+        // гЃ“г‚ЊгЃЊгЃЄгЃ„гЃЁгЂЃгѓ—гѓ¬г‚¤гѓ¤гѓјз§»е‹•дё­гЃ®гѓ‰гѓ©гѓѓг‚°з„ЎеЉ№еЊ–г‚„г‚»гѓіг‚їгѓЄгѓіг‚°ж©џиѓЅгЃЊе‹•дЅњгЃ—гЃѕгЃ›г‚“гЂ‚
         if (playerMovementController == null)
         {
-            Debug.LogError("[MapInteractionHandler] Player Map Movement Controller‚ЄѓAѓTѓCѓ“‚і‚к‚Д‚ў‚Ь‚№‚сЃIInspector‚ЕђЭ’и‚µ‚Д‚­‚ѕ‚і‚ўЃB", this);
-            enabled = false; // ѓAѓTѓCѓ“‚і‚к‚Д‚ў‚И‚ўЏкЌ‡‚НѓXѓNѓЉѓvѓg‚р–іЊш‰»‚µЃA‚±‚к€ИЏгЏ€—ќ‚Єђi‚Ь‚И‚ў‚ж‚¤‚Й‚µ‚Ь‚·ЃB
+            Debug.LogError("[MapInteractionHandler] Player Map Movement ControllerгЃЊг‚ўг‚µг‚¤гѓігЃ•г‚ЊгЃ¦гЃ„гЃѕгЃ›г‚“пјЃInspectorгЃ§иЁ­е®љгЃ—гЃ¦гЃЏгЃ гЃ•гЃ„гЂ‚", this);
+            enabled = false; // г‚ўг‚µг‚¤гѓігЃ•г‚ЊгЃ¦гЃ„гЃЄгЃ„е ґеђ€гЃЇг‚№г‚ЇгѓЄгѓ—гѓ€г‚’з„ЎеЉ№еЊ–гЃ—гЂЃгЃ“г‚Њд»ҐдёЉе‡¦зђ†гЃЊйЂІгЃѕгЃЄгЃ„г‚€гЃ†гЃ«гЃ—гЃѕгЃ™гЂ‚
             return;
         }
 
-        // Џ‰Љъ•\Ћ¦‚НѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚Й‘¦ЋћЃiѓAѓjѓЃЃ[ѓVѓ‡ѓ“‚И‚µ‚ЕЃjЋ‹“_‚рѓZѓ“ѓ^ѓЉѓ“ѓO‚µ‚Ь‚·ЃB
+        // е€ќжњџиЎЁз¤єгЃЇгѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃ«еЌіж™‚пј€г‚ўгѓ‹гѓЎгѓјг‚·гѓ§гѓігЃЄгЃ—гЃ§пј‰и¦–з‚№г‚’г‚»гѓіг‚їгѓЄгѓіг‚°гЃ—гЃѕгЃ™гЂ‚
         CenterViewOnPlayerIcon(instant: true);
 
-        Debug.Log("[MapInteractionHandler] ѓXѓNѓЉѓvѓg‚ЄЉJЋn‚і‚к‚Ь‚µ‚ЅЃB");
+        Debug.Log("[MapInteractionHandler] г‚№г‚ЇгѓЄгѓ—гѓ€гЃЊй–‹е§‹гЃ•г‚ЊгЃѕгЃ—гЃџгЂ‚");
     }
 
     /// <summary>
-    /// –€ѓtѓЊЃ[ѓЂЊД‚СЏo‚і‚к‚йUpdateѓЃѓ\ѓbѓh‚Е‚·ЃB
-    /// ‚±‚МѓЃѓ\ѓbѓh‚Е‚НЃAЋе‚ЙѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚Є€Ъ“®’†‚МЏкЌ‡‚Йѓ}ѓbѓv‘ЂЌм‚р–іЊш‰»‚·‚йЏ€—ќ‚рЌs‚ў‚Ь‚·ЃB
+    /// жЇЋгѓ•гѓ¬гѓјгѓ е‘јгЃіе‡єгЃ•г‚Њг‚‹UpdateгѓЎг‚Ѕгѓѓгѓ‰гЃ§гЃ™гЂ‚
+    /// гЃ“гЃ®гѓЎг‚Ѕгѓѓгѓ‰гЃ§гЃЇгЂЃдё»гЃ«гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃЊз§»е‹•дё­гЃ®е ґеђ€гЃ«гѓћгѓѓгѓ—ж“ЌдЅњг‚’з„ЎеЉ№еЊ–гЃ™г‚‹е‡¦зђ†г‚’иЎЊгЃ„гЃѕгЃ™гЂ‚
     /// </summary>
     void Update()
     {
-        // ѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚ЄЊ»ЌЭ€Ъ“®’†‚Е‚ ‚й‚©‚З‚¤‚©‚рPlayerMapMovementController‚©‚зЋж“ѕ‚µ‚Ь‚·ЃB
-        // ‚а‚µplayerMovementController‚Єnull‚Е‚И‚­ЃA‚©‚В€Ъ“®’†‚Е‚ ‚к‚ОЃA
-        // ѓ}ѓbѓv‚Мѓhѓ‰ѓbѓO‚вѓYЃ[ѓЂ‚И‚З‚Мѓ†Ѓ[ѓUЃ[‘ЂЌм‚р€кЋћ“I‚Й–іЊш‰»‚µ‚Ь‚·ЃB
-        // ‚±‚к‚Й‚ж‚иЃA€Ъ“®ѓAѓjѓЃЃ[ѓVѓ‡ѓ“’†‚Мѓ}ѓbѓv‘ЂЌм‚Й‚ж‚й—\Љъ‚№‚К‹““®‚р–h‚¬‚Ь‚·ЃB
+        // гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃЊзЏѕењЁз§»е‹•дё­гЃ§гЃ‚г‚‹гЃ‹гЃ©гЃ†гЃ‹г‚’PlayerMapMovementControllerгЃ‹г‚‰еЏ–еѕ—гЃ—гЃѕгЃ™гЂ‚
+        // г‚‚гЃ—playerMovementControllerгЃЊnullгЃ§гЃЄгЃЏгЂЃгЃ‹гЃ¤з§»е‹•дё­гЃ§гЃ‚г‚ЊгЃ°гЂЃ
+        // гѓћгѓѓгѓ—гЃ®гѓ‰гѓ©гѓѓг‚°г‚„г‚єгѓјгѓ гЃЄгЃ©гЃ®гѓ¦гѓјг‚¶гѓјж“ЌдЅњг‚’дёЂж™‚зљ„гЃ«з„ЎеЉ№еЊ–гЃ—гЃѕгЃ™гЂ‚
+        // гЃ“г‚ЊгЃ«г‚€г‚ЉгЂЃз§»е‹•г‚ўгѓ‹гѓЎгѓјг‚·гѓ§гѓідё­гЃ®гѓћгѓѓгѓ—ж“ЌдЅњгЃ«г‚€г‚‹дє€жњџгЃ›гЃ¬жЊ™е‹•г‚’йІгЃЋгЃѕгЃ™гЂ‚
         if (playerMovementController != null && playerMovementController.IsPlayerMoving())
         {
-            // ѓfѓoѓbѓOѓЌѓO‚Н•K—v‚Й‰ћ‚¶‚ДѓRѓЃѓ“ѓgѓAѓEѓg‚µ‚Д‚­‚ѕ‚і‚ўЃB
-            // Debug.Log("[MapInteractionHandler] ѓvѓЊѓCѓ„Ѓ[€Ъ“®’†‚М‚Ѕ‚ЯЃAѓ}ѓbѓv‘ЂЌм‚р–іЊш‰»‚µ‚Д‚ў‚Ь‚·ЃB");
+            // гѓ‡гѓђгѓѓг‚°гѓ­г‚°гЃЇеї…и¦ЃгЃ«еїњгЃгЃ¦г‚ігѓЎгѓігѓ€г‚ўг‚¦гѓ€гЃ—гЃ¦гЃЏгЃ гЃ•гЃ„гЂ‚
+            // Debug.Log("[MapInteractionHandler] гѓ—гѓ¬г‚¤гѓ¤гѓјз§»е‹•дё­гЃ®гЃџг‚ЃгЂЃгѓћгѓѓгѓ—ж“ЌдЅњг‚’з„ЎеЉ№еЊ–гЃ—гЃ¦гЃ„гЃѕгЃ™гЂ‚");
 
-            // ‚а‚µ€Ъ“®’†‚ЙЊл‚Б‚Дѓhѓ‰ѓbѓOЏу‘Ф‚Й‚И‚Б‚Д‚µ‚Ь‚Б‚Д‚ў‚Ѕ‚зЃA‚»‚МЏу‘Ф‚р‰рЏњ‚µ‚Ь‚·ЃB
+            // г‚‚гЃ—з§»е‹•дё­гЃ«иЄ¤гЃЈгЃ¦гѓ‰гѓ©гѓѓг‚°зЉ¶ж…‹гЃ«гЃЄгЃЈгЃ¦гЃ—гЃѕгЃЈгЃ¦гЃ„гЃџг‚‰гЂЃгЃќгЃ®зЉ¶ж…‹г‚’и§Јй™¤гЃ—гЃѕгЃ™гЂ‚
             if (isDragging)
             {
                 isDragging = false;
-                Debug.Log("[MapInteractionHandler] ѓvѓЊѓCѓ„Ѓ[€Ъ“®’†‚Йѓhѓ‰ѓbѓOЏу‘Ф‚ЄЊџЏo‚і‚к‚Ѕ‚Ѕ‚ЯЃA‰рЏњ‚µ‚Ь‚µ‚ЅЃB");
+                Debug.Log("[MapInteractionHandler] гѓ—гѓ¬г‚¤гѓ¤гѓјз§»е‹•дё­гЃ«гѓ‰гѓ©гѓѓг‚°зЉ¶ж…‹гЃЊж¤ње‡єгЃ•г‚ЊгЃџгЃџг‚ЃгЂЃи§Јй™¤гЃ—гЃѕгЃ—гЃџгЂ‚");
             }
-            return; // ѓvѓЊѓCѓ„Ѓ[€Ъ“®’†‚Н‚±‚к€ИЌ~‚Мѓ}ѓbѓv‘ЂЌмЏ€—ќЃiѓhѓ‰ѓbѓOЃAѓYЃ[ѓЂ‚И‚ЗЃj‚рЋАЌs‚µ‚Ь‚№‚сЃB
+            return; // гѓ—гѓ¬г‚¤гѓ¤гѓјз§»е‹•дё­гЃЇгЃ“г‚Њд»Ґй™ЌгЃ®гѓћгѓѓгѓ—ж“ЌдЅње‡¦зђ†пј€гѓ‰гѓ©гѓѓг‚°гЂЃг‚єгѓјгѓ гЃЄгЃ©пј‰г‚’е®џиЎЊгЃ—гЃѕгЃ›г‚“гЂ‚
         }
     }
 
     /// <summary>
-    /// MapNode‚ЄѓNѓЉѓbѓN‚і‚к‚Ѕ‚Ж‚«‚ЙMapNodeѓXѓNѓЉѓvѓg‚©‚зЊД‚СЏo‚і‚к‚йѓCѓxѓ“ѓgѓnѓ“ѓhѓ‰‚Е‚·ЃB
-    /// ѓNѓЉѓbѓN‚і‚к‚ЅѓmЃ[ѓh‚ЦѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚р€Ъ“®‚і‚№‚йЏ€—ќ‚рPlayerMapMovementController‚Й—v‹Ѓ‚µ‚Ь‚·ЃB
+    /// MapNodeгЃЊг‚ЇгѓЄгѓѓг‚ЇгЃ•г‚ЊгЃџгЃЁгЃЌгЃ«MapNodeг‚№г‚ЇгѓЄгѓ—гѓ€гЃ‹г‚‰е‘јгЃіе‡єгЃ•г‚Њг‚‹г‚¤гѓ™гѓігѓ€гѓЏгѓігѓ‰гѓ©гЃ§гЃ™гЂ‚
+    /// г‚ЇгѓЄгѓѓг‚ЇгЃ•г‚ЊгЃџгѓЋгѓјгѓ‰гЃёгѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓіг‚’з§»е‹•гЃ•гЃ›г‚‹е‡¦зђ†г‚’PlayerMapMovementControllerгЃ«и¦Ѓж±‚гЃ—гЃѕгЃ™гЂ‚
     /// </summary>
-    /// <param name="clickedNodeId">ѓNѓЉѓbѓN‚і‚к‚ЅѓmЃ[ѓh‚МIDЃB</param>
+    /// <param name="clickedNodeId">г‚ЇгѓЄгѓѓг‚ЇгЃ•г‚ЊгЃџгѓЋгѓјгѓ‰гЃ®IDгЂ‚</param>
     private void HandleNodeClick(string clickedNodeId)
     {
-        Debug.Log($"[MapInteractionHandler] ѓmЃ[ѓhѓNѓЉѓbѓNѓCѓxѓ“ѓg‚рЋуђM‚µ‚Ь‚µ‚Ѕ: {clickedNodeId}");
+        Debug.Log($"[MapInteractionHandler] гѓЋгѓјгѓ‰г‚ЇгѓЄгѓѓг‚Їг‚¤гѓ™гѓігѓ€г‚’еЏ—дїЎгЃ—гЃѕгЃ—гЃџ: {clickedNodeId}");
 
-        // ѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚Є€Ъ“®’†‚МЏкЌ‡ЃA‚Ь‚Ѕ‚НЊ»ЌЭѓhѓ‰ѓbѓO‘ЂЌм’†‚МЏкЌ‡‚НЃAѓmЃ[ѓhѓNѓЉѓbѓN‚р–іЋ‹‚µ‚Ь‚·ЃB
-        // ‚±‚к‚Й‚ж‚иЃA€Ъ“®’†‚вѓ}ѓbѓv‘ЂЌм’†‚М€Уђ}‚µ‚И‚ўѓvѓЊѓCѓ„Ѓ[€Ъ“®‚р–h‚¬‚Ь‚·ЃB
-        // playerMovementController‚Єnull‚Е‚И‚ў‚±‚Ж‚рЉm”F‚µ‚Д‚©‚зIsPlayerMoving()‚рЊД‚СЏo‚µ‚Ь‚·ЃB
+        // гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃЊз§»е‹•дё­гЃ®е ґеђ€гЂЃгЃѕгЃџгЃЇзЏѕењЁгѓ‰гѓ©гѓѓг‚°ж“ЌдЅњдё­гЃ®е ґеђ€гЃЇгЂЃгѓЋгѓјгѓ‰г‚ЇгѓЄгѓѓг‚Їг‚’з„Ўи¦–гЃ—гЃѕгЃ™гЂ‚
+        // гЃ“г‚ЊгЃ«г‚€г‚ЉгЂЃз§»е‹•дё­г‚„гѓћгѓѓгѓ—ж“ЌдЅњдё­гЃ®ж„Џе›ігЃ—гЃЄгЃ„гѓ—гѓ¬г‚¤гѓ¤гѓјз§»е‹•г‚’йІгЃЋгЃѕгЃ™гЂ‚
+        // playerMovementControllerгЃЊnullгЃ§гЃЄгЃ„гЃ“гЃЁг‚’зўєиЄЌгЃ—гЃ¦гЃ‹г‚‰IsPlayerMoving()г‚’е‘јгЃіе‡єгЃ—гЃѕгЃ™гЂ‚
         if (playerMovementController != null && playerMovementController.IsPlayerMoving() || isDragging)
         {
-            Debug.Log($"[MapInteractionHandler] ѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚Є€Ъ“®’†ЃA‚Ь‚Ѕ‚Нѓhѓ‰ѓbѓO’†‚М‚Ѕ‚ЯЃAѓNѓЉѓbѓN‚р–іЋ‹‚µ‚Ь‚µ‚Ѕ.", this);
+            Debug.Log($"[MapInteractionHandler] гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃЊз§»е‹•дё­гЂЃгЃѕгЃџгЃЇгѓ‰гѓ©гѓѓг‚°дё­гЃ®гЃџг‚ЃгЂЃг‚ЇгѓЄгѓѓг‚Їг‚’з„Ўи¦–гЃ—гЃѕгЃ—гЃџ.", this);
             return;
         }
 
-        // PlayerMapMovementController‚ЙЃAѓNѓЉѓbѓN‚і‚к‚ЅѓmЃ[ѓh‚Ц‚МѓvѓЊѓCѓ„Ѓ[€Ъ“®‚рЋЋ‚Э‚й‚ж‚¤—v‹Ѓ‚µ‚Ь‚·ЃB
+        // PlayerMapMovementControllerгЃ«гЂЃг‚ЇгѓЄгѓѓг‚ЇгЃ•г‚ЊгЃџгѓЋгѓјгѓ‰гЃёгЃ®гѓ—гѓ¬г‚¤гѓ¤гѓјз§»е‹•г‚’и©¦гЃїг‚‹г‚€гЃ†и¦Ѓж±‚гЃ—гЃѕгЃ™гЂ‚
         playerMovementController.TryMovePlayerToNode(clickedNodeId);
     }
 
     /// <summary>
-    /// ѓ}ѓbѓv‚МЋ‹“_‚рѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚М€К’u‚ЙѓZѓ“ѓ^ѓЉѓ“ѓO‚µ‚Ь‚·ЃB
-    /// ѓ}ѓbѓv‚МRectTransform‚МanchoredPosition‚р’Іђ®‚·‚й‚±‚Ж‚ЕЃAѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚Є‰ж–К‚М’†‰›‚Й—€‚й‚ж‚¤‚Й‚µ‚Ь‚·ЃB
-    /// ‚±‚МѓЃѓ\ѓbѓh‚НPlayerMapMovementController‚©‚з‚аЊД‚СЏo‚і‚к‚Ь‚·ЃB
+    /// гѓћгѓѓгѓ—гЃ®и¦–з‚№г‚’гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃ®дЅЌзЅ®гЃ«г‚»гѓіг‚їгѓЄгѓіг‚°гЃ—гЃѕгЃ™гЂ‚
+    /// гѓћгѓѓгѓ—гЃ®RectTransformгЃ®anchoredPositionг‚’иЄїж•ґгЃ™г‚‹гЃ“гЃЁгЃ§гЂЃгѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃЊз”»йќўгЃ®дё­е¤®гЃ«жќҐг‚‹г‚€гЃ†гЃ«гЃ—гЃѕгЃ™гЂ‚
+    /// гЃ“гЃ®гѓЎг‚Ѕгѓѓгѓ‰гЃЇPlayerMapMovementControllerгЃ‹г‚‰г‚‚е‘јгЃіе‡єгЃ•г‚ЊгЃѕгЃ™гЂ‚
     /// </summary>
-    /// <param name="instant">true‚МЏкЌ‡ЃAѓAѓjѓЃЃ[ѓVѓ‡ѓ“‚И‚µ‚Е‘¦ЌА‚ЙѓZѓ“ѓ^ѓЉѓ“ѓO‚µ‚Ь‚·ЃBfalse‚МЏкЌ‡ЃAЉЉ‚з‚©‚ИѓAѓjѓЃЃ[ѓVѓ‡ѓ“‚ЕѓZѓ“ѓ^ѓЉѓ“ѓO‚µ‚Ь‚·ЃB</param>
+    /// <param name="instant">trueгЃ®е ґеђ€гЂЃг‚ўгѓ‹гѓЎгѓјг‚·гѓ§гѓігЃЄгЃ—гЃ§еЌіеє§гЃ«г‚»гѓіг‚їгѓЄгѓіг‚°гЃ—гЃѕгЃ™гЂ‚falseгЃ®е ґеђ€гЂЃж»‘г‚‰гЃ‹гЃЄг‚ўгѓ‹гѓЎгѓјг‚·гѓ§гѓігЃ§г‚»гѓіг‚їгѓЄгѓіг‚°гЃ—гЃѕгЃ™гЂ‚</param>
     public Coroutine CenterViewOnPlayerIcon(bool instant = false)
     {
-        // Љщ‚ЙѓZѓ“ѓ^ѓЉѓ“ѓOѓRѓ‹Ѓ[ѓ`ѓ“‚ЄЋАЌs’†‚Е‚ ‚к‚ОЃA‚»‚МѓRѓ‹Ѓ[ѓ`ѓ“‚р’вЋ~‚µ‚Ь‚·ЃB
-        // ‚±‚к‚Й‚ж‚иЃAђV‚µ‚ўѓZѓ“ѓ^ѓЉѓ“ѓO—v‹Ѓ‚Є—€‚Ѕ‚Ж‚«‚ЙЃAЊГ‚ўѓRѓ‹Ѓ[ѓ`ѓ“‚ЄЋc‚и‘±‚Ї‚й‚±‚Ж‚р–h‚¬‚Ь‚·ЃB
+        // ж—ўгЃ«г‚»гѓіг‚їгѓЄгѓіг‚°г‚ігѓ«гѓјгѓЃгѓігЃЊе®џиЎЊдё­гЃ§гЃ‚г‚ЊгЃ°гЂЃгЃќгЃ®г‚ігѓ«гѓјгѓЃгѓіг‚’еЃњж­ўгЃ—гЃѕгЃ™гЂ‚
+        // гЃ“г‚ЊгЃ«г‚€г‚ЉгЂЃж–°гЃ—гЃ„г‚»гѓіг‚їгѓЄгѓіг‚°и¦Ѓж±‚гЃЊжќҐгЃџгЃЁгЃЌгЃ«гЂЃеЏ¤гЃ„г‚ігѓ«гѓјгѓЃгѓігЃЊж®‹г‚Љз¶љгЃ‘г‚‹гЃ“гЃЁг‚’йІгЃЋгЃѕгЃ™гЂ‚
         if (centeringCoroutine != null)
         {
             StopCoroutine(centeringCoroutine);
-            Debug.Log("[MapInteractionHandler] Љщ‘¶‚МѓZѓ“ѓ^ѓЉѓ“ѓOѓRѓ‹Ѓ[ѓ`ѓ“‚р’вЋ~‚µ‚Ь‚µ‚ЅЃB");
-            centeringCoroutine = null; // ’вЋ~‚µ‚Ѕ‚зЋQЏЖ‚р•K‚ёѓNѓЉѓA‚µ‚Ь‚·ЃB
+            Debug.Log("[MapInteractionHandler] ж—ўе­гЃ®г‚»гѓіг‚їгѓЄгѓіг‚°г‚ігѓ«гѓјгѓЃгѓіг‚’еЃњж­ўгЃ—гЃѕгЃ—гЃџгЂ‚");
+            centeringCoroutine = null; // еЃњж­ўгЃ—гЃџг‚‰еЏ‚з…§г‚’еї…гЃљг‚ЇгѓЄг‚ўгЃ—гЃѕгЃ™гЂ‚
         }
 
-        // ѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚МRectTransform‚рPlayerMapMovementController‚©‚зЋж“ѕ‚µ‚Ь‚·ЃB
-        // ѓZѓ“ѓ^ѓЉѓ“ѓO‚М–Ъ•W€К’u‚рЊvЋZ‚·‚й‚Ѕ‚Я‚Й•K—v‚Е‚·ЃB
-        // playerMovementController‚Єnull‚Е‚И‚ў‚±‚Ж‚рЉm”F‚µ‚Ь‚·ЃB
+        // гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃ®RectTransformг‚’PlayerMapMovementControllerгЃ‹г‚‰еЏ–еѕ—гЃ—гЃѕгЃ™гЂ‚
+        // г‚»гѓіг‚їгѓЄгѓіг‚°гЃ®з›®жЁ™дЅЌзЅ®г‚’иЁ€з®—гЃ™г‚‹гЃџг‚ЃгЃ«еї…и¦ЃгЃ§гЃ™гЂ‚
+        // playerMovementControllerгЃЊnullгЃ§гЃЄгЃ„гЃ“гЃЁг‚’зўєиЄЌгЃ—гЃѕгЃ™гЂ‚
         if (playerMovementController == null)
         {
-            Debug.LogError("[MapInteractionHandler] Player Map Movement Controller‚ЄѓAѓTѓCѓ“‚і‚к‚Д‚ў‚И‚ў‚Ѕ‚ЯЃAѓZѓ“ѓ^ѓЉѓ“ѓO‚Е‚«‚Ь‚№‚сЃB", this);
+            Debug.LogError("[MapInteractionHandler] Player Map Movement ControllerгЃЊг‚ўг‚µг‚¤гѓігЃ•г‚ЊгЃ¦гЃ„гЃЄгЃ„гЃџг‚ЃгЂЃг‚»гѓіг‚їгѓЄгѓіг‚°гЃ§гЃЌгЃѕгЃ›г‚“гЂ‚", this);
             return null;
         }
 
         RectTransform playerIconRectTransform = playerMovementController.playerIconRectTransform;
 
-        // ѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚МRectTransform‚ЄЋж“ѕ‚Е‚«‚И‚©‚Б‚ЅЏкЌ‡‚НѓGѓ‰Ѓ[ѓЌѓO‚рЏo—Н‚µЃAЏ€—ќ‚р’†’f‚µ‚Ь‚·ЃB
+        // гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃ®RectTransformгЃЊеЏ–еѕ—гЃ§гЃЌгЃЄгЃ‹гЃЈгЃџе ґеђ€гЃЇг‚Ёгѓ©гѓјгѓ­г‚°г‚’е‡єеЉ›гЃ—гЂЃе‡¦зђ†г‚’дё­ж–­гЃ—гЃѕгЃ™гЂ‚
         if (playerIconRectTransform == null)
         {
-            Debug.LogError("[MapInteractionHandler] ѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚МRect Transform‚ЄPlayerMapMovementController‚©‚зЋж“ѕ‚Е‚«‚Ь‚№‚с‚Е‚µ‚ЅЃBѓZѓ“ѓ^ѓЉѓ“ѓO‚р’†’f‚µ‚Ь‚·ЃB", this);
+            Debug.LogError("[MapInteractionHandler] гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃ®Rect TransformгЃЊPlayerMapMovementControllerгЃ‹г‚‰еЏ–еѕ—гЃ§гЃЌгЃѕгЃ›г‚“гЃ§гЃ—гЃџгЂ‚г‚»гѓіг‚їгѓЄгѓіг‚°г‚’дё­ж–­гЃ—гЃѕгЃ™гЂ‚", this);
             return null;
         }
 
-        // ѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚МЊ»ЌЭ‚М€К’uЃiѓЌЃ[ѓJѓ‹ЌА•WЃj‚рЋж“ѕ‚µ‚Ь‚·ЃB
+        // гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃ®зЏѕењЁгЃ®дЅЌзЅ®пј€гѓ­гѓјг‚«гѓ«еє§жЁ™пј‰г‚’еЏ–еѕ—гЃ—гЃѕгЃ™гЂ‚
         Vector2 playerPosInMap = playerIconRectTransform.anchoredPosition;
-        // Њ»ЌЭ‚Мѓ}ѓbѓv‚МѓXѓPЃ[ѓ‹ЃiѓYЃ[ѓЂ”{—¦Ѓj‚рЋж“ѕ‚µ‚Ь‚·ЃB
+        // зЏѕењЁгЃ®гѓћгѓѓгѓ—гЃ®г‚№г‚±гѓјгѓ«пј€г‚єгѓјгѓ еЂЌзЋ‡пј‰г‚’еЏ–еѕ—гЃ—гЃѕгЃ™гЂ‚
         float currentScale = worldMapRawImageRectTransform.localScale.x;
-        // ѓ}ѓbѓv‰ж‘њ‚рѓZѓ“ѓ^ѓЉѓ“ѓO‚·‚й‚Ѕ‚Я‚М–Ъ•WanchoredPosition‚рЊvЋZ‚µ‚Ь‚·ЃB
-        // ѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚М€К’u‚р”Ѕ“]‚і‚№ЃAЊ»ЌЭ‚МѓXѓPЃ[ѓ‹‚р“K—p‚·‚й‚±‚Ж‚ЕЃAѓ}ѓbѓv‚Є€Ъ“®‚µ‚ЅЌЫ‚ЙѓAѓCѓRѓ“‚Є’†‰›‚Й—€‚й‚ж‚¤‚Й‚µ‚Ь‚·ЃB
+        // гѓћгѓѓгѓ—з”»еѓЏг‚’г‚»гѓіг‚їгѓЄгѓіг‚°гЃ™г‚‹гЃџг‚ЃгЃ®з›®жЁ™anchoredPositionг‚’иЁ€з®—гЃ—гЃѕгЃ™гЂ‚
+        // гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃ®дЅЌзЅ®г‚’еЏЌи»ўгЃ•гЃ›гЂЃзЏѕењЁгЃ®г‚№г‚±гѓјгѓ«г‚’йЃ©з”ЁгЃ™г‚‹гЃ“гЃЁгЃ§гЂЃгѓћгѓѓгѓ—гЃЊз§»е‹•гЃ—гЃџйљ›гЃ«г‚ўг‚¤г‚ігѓігЃЊдё­е¤®гЃ«жќҐг‚‹г‚€гЃ†гЃ«гЃ—гЃѕгЃ™гЂ‚
         Vector2 targetMapPosition = -playerPosInMap * currentScale;
 
-        // ‘¦ЋћѓZѓ“ѓ^ѓЉѓ“ѓOѓ‚Ѓ[ѓh‚МЏкЌ‡
+        // еЌіж™‚г‚»гѓіг‚їгѓЄгѓіг‚°гѓўгѓјгѓ‰гЃ®е ґеђ€
         if (instant)
         {
-            // ѓ}ѓbѓv‚МanchoredPosition‚рЊvЋZ‚і‚к‚Ѕ–Ъ•W€К’u‚Й’јђЪђЭ’и‚µ‚Ь‚·ЃB
+            // гѓћгѓѓгѓ—гЃ®anchoredPositionг‚’иЁ€з®—гЃ•г‚ЊгЃџз›®жЁ™дЅЌзЅ®гЃ«з›ґжЋҐиЁ­е®љгЃ—гЃѕгЃ™гЂ‚
             worldMapRawImageRectTransform.anchoredPosition = targetMapPosition;
-            Debug.Log($"[MapInteractionHandler] ѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚ЙЋ‹“_‚р‘¦ЋћѓZѓ“ѓ^ѓЉѓ“ѓO‚µ‚Ь‚µ‚ЅЃBѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚М€К’u: {playerPosInMap}, ѓ}ѓbѓv‰ж‘њ‚МanchoredPosition: {worldMapRawImageRectTransform.anchoredPosition}");
-            // €К’u‚рђЭ’и‚µ‚ЅЊгЃAѓ}ѓbѓv‚Є‹«ЉEЉO‚ЙЏo‚И‚ў‚ж‚¤‚ЙѓNѓ‰ѓ“ѓv‚µ‚Ь‚·ЃB
+            Debug.Log($"[MapInteractionHandler] гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃ«и¦–з‚№г‚’еЌіж™‚г‚»гѓіг‚їгѓЄгѓіг‚°гЃ—гЃѕгЃ—гЃџгЂ‚гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃ®дЅЌзЅ®: {playerPosInMap}, гѓћгѓѓгѓ—з”»еѓЏгЃ®anchoredPosition: {worldMapRawImageRectTransform.anchoredPosition}");
+            // дЅЌзЅ®г‚’иЁ­е®љгЃ—гЃџеѕЊгЂЃгѓћгѓѓгѓ—гЃЊеўѓз•Ње¤–гЃ«е‡єгЃЄгЃ„г‚€гЃ†гЃ«г‚Їгѓ©гѓігѓ—гЃ—гЃѕгЃ™гЂ‚
             mapBoundsClamper.ClampMapPosition();
-            return null; // ѓRѓ‹Ѓ[ѓ`ѓ“‚Е‚Н‚И‚ў‚Ѕ‚Яnull‚р•Ф‚µ‚Ь‚·ЃB
+            return null; // г‚ігѓ«гѓјгѓЃгѓігЃ§гЃЇгЃЄгЃ„гЃџг‚Ѓnullг‚’иї”гЃ—гЃѕгЃ™гЂ‚
         }
-        // ѓAѓjѓЃЃ[ѓVѓ‡ѓ“ѓZѓ“ѓ^ѓЉѓ“ѓOѓ‚Ѓ[ѓh‚МЏкЌ‡
+        // г‚ўгѓ‹гѓЎгѓјг‚·гѓ§гѓіг‚»гѓіг‚їгѓЄгѓіг‚°гѓўгѓјгѓ‰гЃ®е ґеђ€
         else
         {
-            // CenterViewAnimatedCoroutineѓRѓ‹Ѓ[ѓ`ѓ“‚рЉJЋn‚µЃA‚»‚МЋQЏЖ‚р•ЫЋќ‚µ‚Ь‚·ЃB
-            // ‚±‚к‚Й‚ж‚иЃAѓRѓ‹Ѓ[ѓ`ѓ“‚ЄЋАЌs’†‚Е‚ ‚й‚±‚Ж‚рЉЗ—ќ‚Е‚«‚Ь‚·ЃB
+            // CenterViewAnimatedCoroutineг‚ігѓ«гѓјгѓЃгѓіг‚’й–‹е§‹гЃ—гЂЃгЃќгЃ®еЏ‚з…§г‚’дїќжЊЃгЃ—гЃѕгЃ™гЂ‚
+            // гЃ“г‚ЊгЃ«г‚€г‚ЉгЂЃг‚ігѓ«гѓјгѓЃгѓігЃЊе®џиЎЊдё­гЃ§гЃ‚г‚‹гЃ“гЃЁг‚’з®Ўзђ†гЃ§гЃЌгЃѕгЃ™гЂ‚
             centeringCoroutine = StartCoroutine(CenterViewAnimatedCoroutine(targetMapPosition));
-            Debug.Log("[MapInteractionHandler] ђV‚µ‚ўѓZѓ“ѓ^ѓЉѓ“ѓOѓRѓ‹Ѓ[ѓ`ѓ“‚рЉJЋn‚µ‚Ь‚µ‚ЅЃB");
-            return centeringCoroutine; // ЉJЋn‚µ‚ЅѓRѓ‹Ѓ[ѓ`ѓ“‚МЋQЏЖ‚р•Ф‚µ‚Ь‚·ЃB
+            Debug.Log("[MapInteractionHandler] ж–°гЃ—гЃ„г‚»гѓіг‚їгѓЄгѓіг‚°г‚ігѓ«гѓјгѓЃгѓіг‚’й–‹е§‹гЃ—гЃѕгЃ—гЃџгЂ‚");
+            return centeringCoroutine; // й–‹е§‹гЃ—гЃџг‚ігѓ«гѓјгѓЃгѓігЃ®еЏ‚з…§г‚’иї”гЃ—гЃѕгЃ™гЂ‚
         }
     }
 
     /// <summary>
-    /// ѓ}ѓbѓv‚МЋ‹“_‚р–Ъ•W€К’u‚ЦЉЉ‚з‚©‚ИѓAѓjѓЃЃ[ѓVѓ‡ѓ“‚Е€Ъ“®‚і‚№‚йѓRѓ‹Ѓ[ѓ`ѓ“‚Е‚·ЃB
-    /// LerpЉЦђ”‚рЋg—p‚µ‚ДЃAЊ»ЌЭ‚М€К’u‚©‚з–Ъ•W€К’u‚ЦЏ™ЃX‚Й‹Я‚Г‚Ї‚Ь‚·ЃB
+    /// гѓћгѓѓгѓ—гЃ®и¦–з‚№г‚’з›®жЁ™дЅЌзЅ®гЃёж»‘г‚‰гЃ‹гЃЄг‚ўгѓ‹гѓЎгѓјг‚·гѓ§гѓігЃ§з§»е‹•гЃ•гЃ›г‚‹г‚ігѓ«гѓјгѓЃгѓігЃ§гЃ™гЂ‚
+    /// Lerpй–ўж•°г‚’дЅїз”ЁгЃ—гЃ¦гЂЃзЏѕењЁгЃ®дЅЌзЅ®гЃ‹г‚‰з›®жЁ™дЅЌзЅ®гЃёеѕђгЂ…гЃ«иї‘гЃҐгЃ‘гЃѕгЃ™гЂ‚
     /// </summary>
-    /// <param name="targetPosition">ѓ}ѓbѓv‚МЌЕЏI“I‚ИanchoredPositionЃi–Ъ•W€К’uЃjЃB</param>
+    /// <param name="targetPosition">гѓћгѓѓгѓ—гЃ®жњЂзµ‚зљ„гЃЄanchoredPositionпј€з›®жЁ™дЅЌзЅ®пј‰гЂ‚</param>
     private IEnumerator CenterViewAnimatedCoroutine(Vector2 targetPosition)
     {
-        Debug.Log($"[MapInteractionHandler] CenterViewAnimatedCoroutine ѓRѓ‹Ѓ[ѓ`ѓ“ЉJЋnЃB–Ъ•W€К’u: {targetPosition}");
+        Debug.Log($"[MapInteractionHandler] CenterViewAnimatedCoroutine г‚ігѓ«гѓјгѓЃгѓій–‹е§‹гЂ‚з›®жЁ™дЅЌзЅ®: {targetPosition}");
         float elapsedTime = 0f;
 
-        // –Ъ•W€К’u‚Й”сЏн‚Й‹Я‚­ЃiЊлЌ·‹–—e”Н€Н€И“аЃj‚И‚й‚©ЃA‚Ь‚Ѕ‚НЌЕ‘еЊp‘±ЋћЉФ‚р’ґ‚¦‚й‚Ь‚Еѓ‹Ѓ[ѓv‚р‘±‚Ї‚Ь‚·ЃB
+        // з›®жЁ™дЅЌзЅ®гЃ«йќћеёёгЃ«иї‘гЃЏпј€иЄ¤е·®иЁ±е®№зЇ„е›Ід»Ґе†…пј‰гЃЄг‚‹гЃ‹гЂЃгЃѕгЃџгЃЇжњЂе¤§з¶™з¶љж™‚й–“г‚’и¶…гЃ€г‚‹гЃѕгЃ§гѓ«гѓјгѓ—г‚’з¶љгЃ‘гЃѕгЃ™гЂ‚
         while (Vector2.Distance(worldMapRawImageRectTransform.anchoredPosition, targetPosition) > centeringThreshold &&
                elapsedTime < maxCenteringDuration)
         {
-            // Vector2.Lerp‚©‚зVector2.MoveTowards‚Й•ПЌX
+            // Vector2.LerpгЃ‹г‚‰Vector2.MoveTowardsгЃ«е¤‰ж›ґ
             worldMapRawImageRectTransform.anchoredPosition = Vector2.MoveTowards(
                 worldMapRawImageRectTransform.anchoredPosition,
                 targetPosition,
-                Time.deltaTime * centerSpeed * 20f // Lerp‚Й”д‚Ч‚Д‘¬“x’Іђ®‚Є•K—v‚Й‚И‚йЏкЌ‡‚Є‚ ‚й‚Ѕ‚ЯЃAЏ‰Љъ’l‚р20”{‚Й’Іђ®
+                Time.deltaTime * centerSpeed * 20f // LerpгЃ«жЇ”гЃ№гЃ¦йЂџеє¦иЄїж•ґгЃЊеї…и¦ЃгЃ«гЃЄг‚‹е ґеђ€гЃЊгЃ‚г‚‹гЃџг‚ЃгЂЃе€ќжњџеЂ¤г‚’20еЂЌгЃ«иЄїж•ґ
             );
 
-            // ѓNѓ‰ѓ“ѓvЏ€—ќ‚р—LЊш‰»
+            // г‚Їгѓ©гѓігѓ—е‡¦зђ†г‚’жњ‰еЉ№еЊ–
             mapBoundsClamper.ClampMapPosition();
 
             elapsedTime += Time.deltaTime;
 
-            // ѓZѓ“ѓ^ѓЉѓ“ѓO’†‚МЏЪЌЧѓЌѓO (“®ЌмЉm”FЊг‚ЙѓRѓЃѓ“ѓgѓAѓEѓg‚µ‚Д‚­‚ѕ‚і‚ў)
-            Debug.Log($"[MapInteractionHandler DEBUG] Њ»ЌЭ€К’u: {worldMapRawImageRectTransform.anchoredPosition}, –Ъ•W: {targetPosition}, ‹——Ј: {Vector2.Distance(worldMapRawImageRectTransform.anchoredPosition, targetPosition):F4}, Њo‰Я: {elapsedTime:F2}s, MaxDuration: {maxCenteringDuration:F2}s");
+            // г‚»гѓіг‚їгѓЄгѓіг‚°дё­гЃ®и©ізґ°гѓ­г‚° (е‹•дЅњзўєиЄЌеѕЊгЃ«г‚ігѓЎгѓігѓ€г‚ўг‚¦гѓ€гЃ—гЃ¦гЃЏгЃ гЃ•гЃ„)
+            Debug.Log($"[MapInteractionHandler DEBUG] зЏѕењЁдЅЌзЅ®: {worldMapRawImageRectTransform.anchoredPosition}, з›®жЁ™: {targetPosition}, и·ќй›ў: {Vector2.Distance(worldMapRawImageRectTransform.anchoredPosition, targetPosition):F4}, зµЊйЃЋ: {elapsedTime:F2}s, MaxDuration: {maxCenteringDuration:F2}s");
 
             yield return null;
         }
 
-        // ѓ‹Ѓ[ѓvЏI—№ЊгЃAѓ}ѓbѓv‚МЌЕЏI€К’u‚р–Ъ•W€К’u‚ЙђіЉm‚ЙђЭ’и‚µ‚Ь‚·ЃB
+        // гѓ«гѓјгѓ—зµ‚дє†еѕЊгЂЃгѓћгѓѓгѓ—гЃ®жњЂзµ‚дЅЌзЅ®г‚’з›®жЁ™дЅЌзЅ®гЃ«ж­ЈзўєгЃ«иЁ­е®љгЃ—гЃѕгЃ™гЂ‚
         worldMapRawImageRectTransform.anchoredPosition = targetPosition;
-        // ЌЕЏI€К’uђЭ’иЊг‚аЃAѓ}ѓbѓv‚Є‹«ЉEЉO‚ЙЏo‚И‚ў‚ж‚¤‚ЙЌД“xѓNѓ‰ѓ“ѓv‚µ‚Ь‚·ЃB
+        // жњЂзµ‚дЅЌзЅ®иЁ­е®љеѕЊг‚‚гЂЃгѓћгѓѓгѓ—гЃЊеўѓз•Ње¤–гЃ«е‡єгЃЄгЃ„г‚€гЃ†гЃ«е†Ќеє¦г‚Їгѓ©гѓігѓ—гЃ—гЃѕгЃ™гЂ‚
         mapBoundsClamper.ClampMapPosition();
 
-        // ѓRѓ‹Ѓ[ѓ`ѓ“‚Є‚З‚М‚ж‚¤‚ЙЏI—№‚µ‚Ѕ‚©‚рѓЌѓO‚ЕЉm”F
+        // г‚ігѓ«гѓјгѓЃгѓігЃЊгЃ©гЃ®г‚€гЃ†гЃ«зµ‚дє†гЃ—гЃџгЃ‹г‚’гѓ­г‚°гЃ§зўєиЄЌ
         if (Vector2.Distance(worldMapRawImageRectTransform.anchoredPosition, targetPosition) <= centeringThreshold)
         {
-            Debug.Log("[MapInteractionHandler] CenterViewAnimatedCoroutine ѓRѓ‹Ѓ[ѓ`ѓ“‚Є–Ъ•W‹——Ј‚Й“ћ’B‚µ‚ДЉ®—№‚µ‚Ь‚µ‚ЅЃB");
+            Debug.Log("[MapInteractionHandler] CenterViewAnimatedCoroutine г‚ігѓ«гѓјгѓЃгѓігЃЊз›®жЁ™и·ќй›ўгЃ«е€°йЃ”гЃ—гЃ¦е®Њдє†гЃ—гЃѕгЃ—гЃџгЂ‚");
         }
         else
         {
-            Debug.LogWarning($"[MapInteractionHandler] CenterViewAnimatedCoroutine ѓRѓ‹Ѓ[ѓ`ѓ“‚ЄЌЕ‘еЊp‘±ЋћЉФ({maxCenteringDuration}•b)‚р’ґ‚¦‚Д‹­ђ§ЏI—№‚µ‚Ь‚µ‚ЅЃB–Ъ•W‹——Ј‚Й–ў“ћ’BЃBЌЕЏI‹——Ј: {Vector2.Distance(worldMapRawImageRectTransform.anchoredPosition, targetPosition):F4}");
+            Debug.LogWarning($"[MapInteractionHandler] CenterViewAnimatedCoroutine г‚ігѓ«гѓјгѓЃгѓігЃЊжњЂе¤§з¶™з¶љж™‚й–“({maxCenteringDuration}з§’)г‚’и¶…гЃ€гЃ¦еј·е€¶зµ‚дє†гЃ—гЃѕгЃ—гЃџгЂ‚з›®жЁ™и·ќй›ўгЃ«жњЄе€°йЃ”гЂ‚жњЂзµ‚и·ќй›ў: {Vector2.Distance(worldMapRawImageRectTransform.anchoredPosition, targetPosition):F4}");
         }
 
-        centeringCoroutine = null; // ѓRѓ‹Ѓ[ѓ`ѓ“‚ЄЏI—№‚µ‚Ѕ‚М‚ЕЃAЋQЏЖ‚рnull‚ЙѓNѓЉѓA‚µ‚Ь‚·ЃB
+        centeringCoroutine = null; // г‚ігѓ«гѓјгѓЃгѓігЃЊзµ‚дє†гЃ—гЃџгЃ®гЃ§гЂЃеЏ‚з…§г‚’nullгЃ«г‚ЇгѓЄг‚ўгЃ—гЃѕгЃ™гЂ‚
     }
 
     /// <summary>
-    /// ѓ}ѓbѓv‚Мѓhѓ‰ѓbѓO‘ЂЌм‚ЄЉJЋn‚і‚к‚Ѕ‚Ж‚«‚ЙЊД‚СЏo‚і‚к‚Ь‚·ЃB
-    /// UIѓCѓxѓ“ѓgѓVѓXѓeѓЂЃiIBeginDragHandlerЃj‚Й‚ж‚Б‚ДЊџЏo‚і‚к‚Ь‚·ЃB
+    /// гѓћгѓѓгѓ—гЃ®гѓ‰гѓ©гѓѓг‚°ж“ЌдЅњгЃЊй–‹е§‹гЃ•г‚ЊгЃџгЃЁгЃЌгЃ«е‘јгЃіе‡єгЃ•г‚ЊгЃѕгЃ™гЂ‚
+    /// UIг‚¤гѓ™гѓігѓ€г‚·г‚№гѓ†гѓ пј€IBeginDragHandlerпј‰гЃ«г‚€гЃЈгЃ¦ж¤ње‡єгЃ•г‚ЊгЃѕгЃ™гЂ‚
     /// </summary>
-    /// <param name="eventData">ѓ|ѓCѓ“ѓ^Ѓ[ѓCѓxѓ“ѓgѓfЃ[ѓ^ЃBѓ}ѓEѓX‚Мѓ{ѓ^ѓ“‚в€К’uЏо•с‚рЉЬ‚Э‚Ь‚·ЃB</param>
+    /// <param name="eventData">гѓќг‚¤гѓіг‚їгѓјг‚¤гѓ™гѓігѓ€гѓ‡гѓјг‚їгЂ‚гѓћг‚¦г‚№гЃ®гѓњг‚їгѓіг‚„дЅЌзЅ®жѓ…е ±г‚’еђ«гЃїгЃѕгЃ™гЂ‚</param>
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // ѓvѓЊѓCѓ„Ѓ[ѓAѓCѓRѓ“‚ЄЊ»ЌЭ€Ъ“®’†‚Е‚ ‚йЏкЌ‡ЃAѓhѓ‰ѓbѓO‘ЂЌм‚рЉJЋn‚і‚№‚И‚ў‚ж‚¤‚Й‚µ‚Ь‚·ЃB
-        // ‚±‚к‚Й‚ж‚иЃAѓvѓЊѓCѓ„Ѓ[€Ъ“®’†‚Жѓ}ѓbѓvѓhѓ‰ѓbѓO‘ЂЌм‚МЉ±ЏВ‚р–h‚¬‚Ь‚·ЃB
-        // playerMovementController‚Єnull‚Е‚И‚ў‚±‚Ж‚рЉm”F‚µ‚Д‚©‚зIsPlayerMoving()‚рЊД‚СЏo‚µ‚Ь‚·ЃB
+        // гѓ—гѓ¬г‚¤гѓ¤гѓјг‚ўг‚¤г‚ігѓігЃЊзЏѕењЁз§»е‹•дё­гЃ§гЃ‚г‚‹е ґеђ€гЂЃгѓ‰гѓ©гѓѓг‚°ж“ЌдЅњг‚’й–‹е§‹гЃ•гЃ›гЃЄгЃ„г‚€гЃ†гЃ«гЃ—гЃѕгЃ™гЂ‚
+        // гЃ“г‚ЊгЃ«г‚€г‚ЉгЂЃгѓ—гѓ¬г‚¤гѓ¤гѓјз§»е‹•дё­гЃЁгѓћгѓѓгѓ—гѓ‰гѓ©гѓѓг‚°ж“ЌдЅњгЃ®е№Іжё‰г‚’йІгЃЋгЃѕгЃ™гЂ‚
+        // playerMovementControllerгЃЊnullгЃ§гЃЄгЃ„гЃ“гЃЁг‚’зўєиЄЌгЃ—гЃ¦гЃ‹г‚‰IsPlayerMoving()г‚’е‘јгЃіе‡єгЃ—гЃѕгЃ™гЂ‚
         if (playerMovementController != null && playerMovementController.IsPlayerMoving())
         {
-            Debug.Log("[MapInteractionHandler] ѓvѓЊѓCѓ„Ѓ[€Ъ“®’†‚М‚Ѕ‚ЯЃAѓhѓ‰ѓbѓOЉJЋn‚р–іЊш‰»‚µ‚Ь‚µ‚ЅЃB", this);
-            isDragging = false; // ”O‚М‚Ѕ‚ЯЃAѓhѓ‰ѓbѓO’†ѓtѓ‰ѓO‚рЉmЋА‚Йfalse‚Й‚µ‚Ь‚·ЃB
+            Debug.Log("[MapInteractionHandler] гѓ—гѓ¬г‚¤гѓ¤гѓјз§»е‹•дё­гЃ®гЃџг‚ЃгЂЃгѓ‰гѓ©гѓѓг‚°й–‹е§‹г‚’з„ЎеЉ№еЊ–гЃ—гЃѕгЃ—гЃџгЂ‚", this);
+            isDragging = false; // еїµгЃ®гЃџг‚ЃгЂЃгѓ‰гѓ©гѓѓг‚°дё­гѓ•гѓ©г‚°г‚’зўєе®џгЃ«falseгЃ«гЃ—гЃѕгЃ™гЂ‚
             return;
         }
 
-        // Ќ¶ѓNѓЉѓbѓNЃiPrimary ButtonЃj‚Е‚Мѓhѓ‰ѓbѓO‚М‚Э‚рЊџЏo‚µ‚Ь‚·ЃB
+        // е·¦г‚ЇгѓЄгѓѓг‚Їпј€Primary Buttonпј‰гЃ§гЃ®гѓ‰гѓ©гѓѓг‚°гЃ®гЃїг‚’ж¤ње‡єгЃ—гЃѕгЃ™гЂ‚
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            isDragging = true; // ѓhѓ‰ѓbѓO’†ѓtѓ‰ѓO‚рtrue‚ЙђЭ’и‚µ‚Ь‚·ЃB
-            lastMousePosition = eventData.position; // Њ»ЌЭ‚Мѓ}ѓEѓX€К’u‚р‹L^‚µ‚Ь‚·ЃB
-            Debug.Log("[MapInteractionHandler] ѓhѓ‰ѓbѓOЉJЋnЃB");
+            isDragging = true; // гѓ‰гѓ©гѓѓг‚°дё­гѓ•гѓ©г‚°г‚’trueгЃ«иЁ­е®љгЃ—гЃѕгЃ™гЂ‚
+            lastMousePosition = eventData.position; // зЏѕењЁгЃ®гѓћг‚¦г‚№дЅЌзЅ®г‚’иЁйЊІгЃ—гЃѕгЃ™гЂ‚
+            Debug.Log("[MapInteractionHandler] гѓ‰гѓ©гѓѓг‚°й–‹е§‹гЂ‚");
         }
     }
 
     /// <summary>
-    /// ѓhѓ‰ѓbѓO’†‚Й–€ѓtѓЊЃ[ѓЂЊД‚СЏo‚і‚к‚Ь‚·ЃB
-    /// UIѓCѓxѓ“ѓgѓVѓXѓeѓЂЃiIDragHandlerЃj‚Й‚ж‚Б‚ДЊџЏo‚і‚к‚Ь‚·ЃB
-    /// ѓ}ѓEѓX‚М€Ъ“®—К‚Й‰ћ‚¶‚Дѓ}ѓbѓv‚МanchoredPosition‚р’Іђ®‚µЃAѓ}ѓbѓv‚р€Ъ“®‚і‚№‚Ь‚·ЃB
+    /// гѓ‰гѓ©гѓѓг‚°дё­гЃ«жЇЋгѓ•гѓ¬гѓјгѓ е‘јгЃіе‡єгЃ•г‚ЊгЃѕгЃ™гЂ‚
+    /// UIг‚¤гѓ™гѓігѓ€г‚·г‚№гѓ†гѓ пј€IDragHandlerпј‰гЃ«г‚€гЃЈгЃ¦ж¤ње‡єгЃ•г‚ЊгЃѕгЃ™гЂ‚
+    /// гѓћг‚¦г‚№гЃ®з§»е‹•й‡ЏгЃ«еїњгЃгЃ¦гѓћгѓѓгѓ—гЃ®anchoredPositionг‚’иЄїж•ґгЃ—гЂЃгѓћгѓѓгѓ—г‚’з§»е‹•гЃ•гЃ›гЃѕгЃ™гЂ‚
     /// </summary>
-    /// <param name="eventData">ѓ|ѓCѓ“ѓ^Ѓ[ѓCѓxѓ“ѓgѓfЃ[ѓ^ЃBѓ}ѓEѓX‚МЊ»ЌЭ€К’u‚рЉЬ‚Э‚Ь‚·ЃB</param>
+    /// <param name="eventData">гѓќг‚¤гѓіг‚їгѓјг‚¤гѓ™гѓігѓ€гѓ‡гѓјг‚їгЂ‚гѓћг‚¦г‚№гЃ®зЏѕењЁдЅЌзЅ®г‚’еђ«гЃїгЃѕгЃ™гЂ‚</param>
     public void OnDrag(PointerEventData eventData)
     {
-        // isDraggingѓtѓ‰ѓO‚Єtrue‚МЏкЌ‡Ѓi‚В‚Ь‚иЃAѓhѓ‰ѓbѓO‘ЂЌм‚ЄЉJЋn‚і‚к‚Д‚ў‚йЏкЌ‡Ѓj‚М‚ЭЏ€—ќ‚рЋАЌs‚µ‚Ь‚·ЃB
+        // isDraggingгѓ•гѓ©г‚°гЃЊtrueгЃ®е ґеђ€пј€гЃ¤гЃѕг‚ЉгЂЃгѓ‰гѓ©гѓѓг‚°ж“ЌдЅњгЃЊй–‹е§‹гЃ•г‚ЊгЃ¦гЃ„г‚‹е ґеђ€пј‰гЃ®гЃїе‡¦зђ†г‚’е®џиЎЊгЃ—гЃѕгЃ™гЂ‚
         if (isDragging)
         {
-            // Њ»ЌЭ‚Мѓ}ѓEѓX€К’u‚рЋж“ѕ‚µ‚Ь‚·ЃB
+            // зЏѕењЁгЃ®гѓћг‚¦г‚№дЅЌзЅ®г‚’еЏ–еѕ—гЃ—гЃѕгЃ™гЂ‚
             Vector2 currentMousePosition = eventData.position;
-            // ‘O‚МѓtѓЊЃ[ѓЂ‚©‚з‚Мѓ}ѓEѓX‚М€Ъ“®—КЃiѓfѓ‹ѓ^Ѓj‚рЊvЋZ‚µ‚Ь‚·ЃB
+            // е‰ЌгЃ®гѓ•гѓ¬гѓјгѓ гЃ‹г‚‰гЃ®гѓћг‚¦г‚№гЃ®з§»е‹•й‡Џпј€гѓ‡гѓ«г‚їпј‰г‚’иЁ€з®—гЃ—гЃѕгЃ™гЂ‚
             Vector2 delta = currentMousePosition - lastMousePosition;
 
-            // ѓ}ѓbѓv‚МanchoredPosition‚Йѓ}ѓEѓX‚М€Ъ“®—К‚р“K—p‚µЃAѓhѓ‰ѓbѓO‘¬“x‚рЏжЋZ‚µ‚Ь‚·ЃB
+            // гѓћгѓѓгѓ—гЃ®anchoredPositionгЃ«гѓћг‚¦г‚№гЃ®з§»е‹•й‡Џг‚’йЃ©з”ЁгЃ—гЂЃгѓ‰гѓ©гѓѓг‚°йЂџеє¦г‚’д№—з®—гЃ—гЃѕгЃ™гЂ‚
             worldMapRawImageRectTransform.anchoredPosition += delta * dragSpeed;
 
-            // Њ»ЌЭ‚Мѓ}ѓEѓX€К’u‚рЋџѓtѓЊЃ[ѓЂ‚МЊvЋZ‚М‚Ѕ‚Я‚Й•Ы‘¶‚µ‚Ь‚·ЃB
+            // зЏѕењЁгЃ®гѓћг‚¦г‚№дЅЌзЅ®г‚’ж¬Ўгѓ•гѓ¬гѓјгѓ гЃ®иЁ€з®—гЃ®гЃџг‚ЃгЃ«дїќе­гЃ—гЃѕгЃ™гЂ‚
             lastMousePosition = currentMousePosition;
 
-            // ѓ}ѓbѓv‚Є‹«ЉEЉO‚ЙЏo‚И‚ў‚ж‚¤‚ЙЃA–€ѓtѓЊЃ[ѓЂ€К’u‚рѓNѓ‰ѓ“ѓv‚·‚й‚ж‚¤MapBoundsClamper‚Й—v‹Ѓ‚µ‚Ь‚·ЃB
+            // гѓћгѓѓгѓ—гЃЊеўѓз•Ње¤–гЃ«е‡єгЃЄгЃ„г‚€гЃ†гЃ«гЂЃжЇЋгѓ•гѓ¬гѓјгѓ дЅЌзЅ®г‚’г‚Їгѓ©гѓігѓ—гЃ™г‚‹г‚€гЃ†MapBoundsClamperгЃ«и¦Ѓж±‚гЃ—гЃѕгЃ™гЂ‚
             mapBoundsClamper.ClampMapPosition();
         }
     }
 
     /// <summary>
-    /// ѓhѓ‰ѓbѓO‘ЂЌм‚ЄЏI—№‚µ‚Ѕ‚Ж‚«‚ЙЊД‚СЏo‚і‚к‚Ь‚·ЃB
-    /// UIѓCѓxѓ“ѓgѓVѓXѓeѓЂЃiIEndDragHandlerЃj‚Й‚ж‚Б‚ДЊџЏo‚і‚к‚Ь‚·ЃB
+    /// гѓ‰гѓ©гѓѓг‚°ж“ЌдЅњгЃЊзµ‚дє†гЃ—гЃџгЃЁгЃЌгЃ«е‘јгЃіе‡єгЃ•г‚ЊгЃѕгЃ™гЂ‚
+    /// UIг‚¤гѓ™гѓігѓ€г‚·г‚№гѓ†гѓ пј€IEndDragHandlerпј‰гЃ«г‚€гЃЈгЃ¦ж¤ње‡єгЃ•г‚ЊгЃѕгЃ™гЂ‚
     /// </summary>
-    /// <param name="eventData">ѓ|ѓCѓ“ѓ^Ѓ[ѓCѓxѓ“ѓgѓfЃ[ѓ^ЃB‚З‚Мѓ{ѓ^ѓ“‚Є—Ј‚і‚к‚Ѕ‚©‚рЉЬ‚Э‚Ь‚·ЃB</param>
+    /// <param name="eventData">гѓќг‚¤гѓіг‚їгѓјг‚¤гѓ™гѓігѓ€гѓ‡гѓјг‚їгЂ‚гЃ©гЃ®гѓњг‚їгѓігЃЊй›ўгЃ•г‚ЊгЃџгЃ‹г‚’еђ«гЃїгЃѕгЃ™гЂ‚</param>
     public void OnEndDrag(PointerEventData eventData)
     {
-        // Ќ¶ѓNѓЉѓbѓNЃiPrimary ButtonЃj‚Е‚Мѓhѓ‰ѓbѓO‚ЄЏI—№‚µ‚ЅЏкЌ‡‚М‚ЭЏ€—ќ‚рЋАЌs‚µ‚Ь‚·ЃB
+        // е·¦г‚ЇгѓЄгѓѓг‚Їпј€Primary Buttonпј‰гЃ§гЃ®гѓ‰гѓ©гѓѓг‚°гЃЊзµ‚дє†гЃ—гЃџе ґеђ€гЃ®гЃїе‡¦зђ†г‚’е®џиЎЊгЃ—гЃѕгЃ™гЂ‚
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            isDragging = false; // ѓhѓ‰ѓbѓO’†ѓtѓ‰ѓO‚рfalse‚ЙђЭ’и‚µ‚Ь‚·ЃB
-            Debug.Log("[MapInteractionHandler] ѓhѓ‰ѓbѓOЏI—№ЃB");
+            isDragging = false; // гѓ‰гѓ©гѓѓг‚°дё­гѓ•гѓ©г‚°г‚’falseгЃ«иЁ­е®љгЃ—гЃѕгЃ™гЂ‚
+            Debug.Log("[MapInteractionHandler] гѓ‰гѓ©гѓѓг‚°зµ‚дє†гЂ‚");
         }
     }
 }

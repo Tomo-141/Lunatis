@@ -1,77 +1,77 @@
-// MapNode.cs
-// ���̃X�N���v�g�́A�}�b�v��̊e�m�[�h�i�n�_�j�̏���ێ����܂��B
-// �m�[�hID�A�m�[�h���A�����Đڑ�����Ă��鑼�̃m�[�h��ID���X�g���܂݂܂��B
-// �܂��AUI�N���b�N�C�x���g�����o����@�\�������܂��B
+﻿// MapNode.cs 
+// このスクリプトは、マップ上の各ノード（地点）の情報を保持します。
+// ノードID、ノード名、そして接続されている他のノードのIDリストを含みます。
+// また、UIクリックイベントを検出する機能も持ちます。
 
 using UnityEngine;
-using System.Collections.Generic; // List<T>���g�p���邽�߂ɕK�v
-using UnityEngine.EventSystems;   // IPointerClickHandler ���g�p���邽�߂ɕK�v
-using System;                     // Action ���g�p���邽�߂ɕK�v
-using System.Linq; // ConnectedNodes����NodeId�̃��X�g�𐶐����邽�߂ɕK�v
+using System.Collections.Generic; // List<T>を使用するために必要
+using UnityEngine.EventSystems;   // IPointerClickHandler を使用するために必要
+using System;                     // Action を使用するために必要
+using System.Linq; // ConnectedNodesからNodeIdのリストを生成するために必要
 
 public class MapNode : MonoBehaviour, IPointerClickHandler
 {
-    [Tooltip("���̃m�[�h�̈�ӂ̎��ʎq�i��: TownA, Dungeon1�Ȃǁj�BHierarchy��GameObject���ƍ��킹�邱�Ƃ𐄏����܂��B")]
-    public string NodeId; // NodeId�͈��������蓮���͂܂��͎��������i�������j�̕�����Ƃ��ĕێ�
+    [Tooltip("このノードの一意の識別子（例: TownA, Dungeon1など）。HierarchyのGameObject名と合わせることを推奨します。")]
+    public string NodeId; // NodeIdは引き続き手動入力または自動生成（未実装）の文字列として保持
 
-    [Tooltip("���̃m�[�h�̕\�����i��: �u�͂��܂�̊X�v�Ȃǁj")]
+    [Tooltip("このノードの表示名（例: 「はじまりの街」など）")]
     public string NodeName;
 
-    // ConnectedNodeIds �� MapNode �^�̃��X�g�ɕύX���܂�
-    [Tooltip("���̃m�[�h���璼�ڐڑ�����Ă��鑼�̃m�[�h�̎Q�ƃ��X�g�BHierarchy����MapNode�R���|�[�l���g������GameObject���h���b�O���h���b�v���Ă��������B")]
-    public List<MapNode> ConnectedNodes; // MapNode�̎Q�ƃ��X�g�ɕύX
+    // ConnectedNodeIds を MapNode 型のリストに変更します
+    [Tooltip("このノードから直接接続されている他のノードの参照リスト。HierarchyからMapNodeコンポーネントを持つGameObjectをドラッグ＆ドロップしてください。")]
+    public List<MapNode> ConnectedNodes; // MapNodeの参照リストに変更
 
-    // �m�[�h���N���b�N���ꂽ�Ƃ��ɌĂяo�����ÓI�C�x���g
-    // �����ɂ̓N���b�N���ꂽ�m�[�h��ID���܂܂�܂�
+    // ノードがクリックされたときに呼び出される静的イベント
+    // 引数にはクリックされたノードのIDが含まれます
     public static event Action<string> OnNodeClicked;
 
     /// <summary>
-    /// Unity�G�f�B�^�ł̂݌Ăяo����A�R���|�[�l���g�����[�h���ꂽ�Ƃ��Ɏ��s����܂��B
-    /// �f�o�b�O�p�ɁA�m�[�hID�����ݒ�̏ꍇ�Ɍx�����o���܂��B
+    /// Unityエディタでのみ呼び出され、コンポーネントがロードされたときに実行されます。
+    /// デバッグ用に、ノードIDが未設定の場合に警告を出します。
     /// </summary>
     void OnValidate()
     {
         if (string.IsNullOrEmpty(NodeId))
         {
-            Debug.LogWarning($"[MapNode] GameObject '{gameObject.name}' ��NodeId���ݒ肳��Ă��܂���B��ӂ�ID��ݒ肵�Ă��������B", this);
+            Debug.LogWarning($"[MapNode] GameObject '{gameObject.name}' のNodeIdが設定されていません。一意のIDを設定してください。", this);
         }
 
-        // ConnectedNodes���X�g��null�łȂ����m�F���A�v�f������ꍇ�͌x��
+        // ConnectedNodesリストがnullでないか確認し、要素がある場合は警告
         if (ConnectedNodes != null)
         {
             foreach (var node in ConnectedNodes)
             {
                 if (node == null)
                 {
-                    Debug.LogWarning($"[MapNode] �m�[�h '{NodeId}' ��ConnectedNodes���X�g��null�̗v�f������܂��B�Q�Ƃ��؂�Ă��邩�A�������ݒ肳��Ă��܂���B", this);
+                    Debug.LogWarning($"[MapNode] ノード '{NodeId}' のConnectedNodesリストにnullの要素があります。参照が切れているか、正しく設定されていません。", this);
                 }
                 else if (string.IsNullOrEmpty(node.NodeId))
                 {
-                    Debug.LogWarning($"[MapNode] �m�[�h '{NodeId}' ��ConnectedNodes���X�g�Ɋ܂܂��m�[�h '{node.name}' ��NodeId���ݒ肳��Ă��܂���B", this);
+                    Debug.LogWarning($"[MapNode] ノード '{NodeId}' のConnectedNodesリストに含まれるノード '{node.name}' のNodeIdが設定されていません。", this);
                 }
             }
         }
     }
 
     /// <summary>
-    /// ���̃m�[�h���N���b�N���ꂽ�Ƃ��ɌĂяo����܂��B
+    /// このノードがクリックされたときに呼び出されます。
     /// </summary>
-    /// <param name="eventData">�|�C���^�[�C�x���g�f�[�^�B</param>
+    /// <param name="eventData">ポインターイベントデータ。</param>
     public void OnPointerClick(PointerEventData eventData)
     {
-        // �ÓI�C�x���g���Ăяo���A�N���b�N���ꂽ�m�[�h��ID��n���܂��B
+        // 静的イベントを呼び出し、クリックされたノードのIDを渡します。
         OnNodeClicked?.Invoke(NodeId);
-        Debug.Log($"[MapNode] �m�[�h '{NodeName}' (ID: {NodeId}) ���N���b�N����܂����B�C�x���g�𔭉΂��܂����B", this);
+        Debug.Log($"[MapNode] ノード '{NodeName}' (ID: {NodeId}) がクリックされました。イベントを発火しました。", this);
     }
 
     /// <summary>
-    /// ConnectedNodes���X�g����A�ڑ�����Ă���m�[�h��ID���X�g���擾���܂��B
-    /// ���̃��\�b�h��MapInteractionHandler�Ȃǂ��ڑ�����Ɏg�p���܂��B
+    /// ConnectedNodesリストから、接続されているノードのIDリストを取得します。
+    /// このメソッドはMapInteractionHandlerなどが接続判定に使用します。
     /// </summary>
-    /// <returns>�ڑ�����Ă���m�[�h��ID�̃��X�g�B</returns>
+    /// <returns>接続されているノードのIDのリスト。</returns>
     public List<string> GetConnectedNodeIds()
     {
-        // null�`�F�b�N���s���Anull�v�f���t�B���^�����O����NodeId�̃��X�g��Ԃ��܂��B
+        // nullチェックを行い、null要素をフィルタリングしてNodeIdのリストを返します。
         if (ConnectedNodes == null)
         {
             return new List<string>();

@@ -1,65 +1,65 @@
-// MapPathManager.cs
-// ‚±‚ÌƒXƒNƒŠƒvƒg‚ÍAƒ}ƒbƒvã‚Ì‘S‚Ä‚Ìƒm[ƒhiMapNodeƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ‚ÂGameObjectj‚ğŠÇ—‚µA
-// ƒm[ƒhID‚ğƒL[‚Æ‚µ‚ÄŠÈ’P‚ÉƒAƒNƒZƒX‚Å‚«‚é‚æ‚¤‚É‚µ‚Ü‚·B
-// å‚ÉŒo˜H’Tõ‚âƒm[ƒhŠÔ‚ÌÚ‘±î•ñ‚ª•K—v‚È‘¼‚ÌƒVƒXƒeƒ€‚©‚çQÆ‚³‚ê‚Ü‚·B
-// Dijkstra–@‚É‚æ‚éÅ’ZŒo˜H’Tõ‹@”\‚à’ñ‹Ÿ‚µ‚Ü‚·B
+ï»¿// MapPathManager.cs 
+// ã“ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã¯ã€ãƒãƒƒãƒ—ä¸Šã®å…¨ã¦ã®ãƒãƒ¼ãƒ‰ï¼ˆMapNodeã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’æŒã¤GameObjectï¼‰ã‚’ç®¡ç†ã—ã€
+// ãƒãƒ¼ãƒ‰IDã‚’ã‚­ãƒ¼ã¨ã—ã¦ç°¡å˜ã«ã‚¢ã‚¯ã‚»ã‚¹ã§ãã‚‹ã‚ˆã†ã«ã—ã¾ã™ã€‚
+// ä¸»ã«çµŒè·¯æ¢ç´¢ã‚„ãƒãƒ¼ãƒ‰é–“ã®æ¥ç¶šæƒ…å ±ãŒå¿…è¦ãªä»–ã®ã‚·ã‚¹ãƒ†ãƒ ã‹ã‚‰å‚ç…§ã•ã‚Œã¾ã™ã€‚
+// Dijkstraæ³•ã«ã‚ˆã‚‹æœ€çŸ­çµŒè·¯æ¢ç´¢æ©Ÿèƒ½ã‚‚æä¾›ã—ã¾ã™ã€‚
 
 using UnityEngine;
-using System.Collections.Generic; // Dictionary<TKey, TValue>‚ğg—p‚·‚é‚½‚ß‚É•K—v
-using System.Linq; // LINQ‚ğg—p‚·‚é‚½‚ß‚É•K—v
+using System.Collections.Generic; // Dictionary<TKey, TValue>ã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚ã«å¿…è¦
+using System.Linq; // LINQã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚ã«å¿…è¦
 
 public class MapPathManager : MonoBehaviour
 {
-    // ‘S‚Ä‚Ìƒm[ƒh‚ğID‚ÅŒŸõ‚Å‚«‚é‚æ‚¤‚É«‘‚ÅŠÇ—‚µ‚Ü‚·B
-    // UnityƒGƒfƒBƒ^‚Å’¼Úİ’è‚·‚é‚Ì‚Å‚Í‚È‚­AAwake‚É©“®‚ÅûW‚µ‚Ü‚·B
+    // å…¨ã¦ã®ãƒãƒ¼ãƒ‰ã‚’IDã§æ¤œç´¢ã§ãã‚‹ã‚ˆã†ã«è¾æ›¸ã§ç®¡ç†ã—ã¾ã™ã€‚
+    // Unityã‚¨ãƒ‡ã‚£ã‚¿ã§ç›´æ¥è¨­å®šã™ã‚‹ã®ã§ã¯ãªãã€Awakeæ™‚ã«è‡ªå‹•ã§åé›†ã—ã¾ã™ã€‚
     private Dictionary<string, MapNode> allNodes = new Dictionary<string, MapNode>();
 
-    // ƒVƒ“ƒOƒ‹ƒgƒ“ƒpƒ^[ƒ“iŠÈˆÕ”ÅjF‘¼‚ÌƒXƒNƒŠƒvƒg‚©‚çŠÈ’P‚ÉƒAƒNƒZƒX‚Å‚«‚é‚æ‚¤‚É‚µ‚Ü‚·B
+    // ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³ï¼ˆç°¡æ˜“ç‰ˆï¼‰ï¼šä»–ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‹ã‚‰ç°¡å˜ã«ã‚¢ã‚¯ã‚»ã‚¹ã§ãã‚‹ã‚ˆã†ã«ã—ã¾ã™ã€‚
     public static MapPathManager Instance { get; private set; }
 
     /// <summary>
-    /// Awake‚ÍƒXƒNƒŠƒvƒgƒCƒ“ƒXƒ^ƒ“ƒX‚ªƒ[ƒh‚³‚ê‚½‚Æ‚«‚ÉŒÄ‚Ño‚³‚ê‚Ü‚·B
-    /// ƒVƒ“ƒOƒ‹ƒgƒ“‚Ìİ’è‚ÆAƒV[ƒ““à‚Ì‘S‚Ä‚ÌMapNode‚ğûW‚µ‚Ü‚·B
+    /// Awakeã¯ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒãƒ­ãƒ¼ãƒ‰ã•ã‚ŒãŸã¨ãã«å‘¼ã³å‡ºã•ã‚Œã¾ã™ã€‚
+    /// ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã®è¨­å®šã¨ã€ã‚·ãƒ¼ãƒ³å†…ã®å…¨ã¦ã®MapNodeã‚’åé›†ã—ã¾ã™ã€‚
     /// </summary>
     void Awake()
     {
-        // ƒVƒ“ƒOƒ‹ƒgƒ“ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì‰Šú‰»
+        // ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®åˆæœŸåŒ–
         if (Instance == null)
         {
             Instance = this;
-            // ƒV[ƒ“‚ğƒ[ƒh‚µ’¼‚µ‚Ä‚àƒCƒ“ƒXƒ^ƒ“ƒX‚ª”jŠü‚³‚ê‚È‚¢‚æ‚¤‚É‚·‚éê‡‚ÍADontDestroyOnLoad(gameObject); ‚ğg—p‚µ‚Ü‚·‚ªA
-            // ¡‰ñ‚Íƒ}ƒbƒv‰æ–Êê—p‚È‚Ì‚Å•s—v‚©‚à‚µ‚ê‚Ü‚¹‚ñB
+            // ã‚·ãƒ¼ãƒ³ã‚’ãƒ­ãƒ¼ãƒ‰ã—ç›´ã—ã¦ã‚‚ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒç ´æ£„ã•ã‚Œãªã„ã‚ˆã†ã«ã™ã‚‹å ´åˆã¯ã€DontDestroyOnLoad(gameObject); ã‚’ä½¿ç”¨ã—ã¾ã™ãŒã€
+            // ä»Šå›ã¯ãƒãƒƒãƒ—ç”»é¢å°‚ç”¨ãªã®ã§ä¸è¦ã‹ã‚‚ã—ã‚Œã¾ã›ã‚“ã€‚
         }
         else
         {
-            Debug.LogWarning("[MapPathManager] •¡”‚ÌMapPathManagerƒCƒ“ƒXƒ^ƒ“ƒX‚ªŒ©‚Â‚©‚è‚Ü‚µ‚½BŠù‘¶‚Ì‚à‚Ì‚ğ•Û‚µA‚±‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Í”jŠü‚µ‚Ü‚·B", this);
+            Debug.LogWarning("[MapPathManager] è¤‡æ•°ã®MapPathManagerã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒè¦‹ã¤ã‹ã‚Šã¾ã—ãŸã€‚æ—¢å­˜ã®ã‚‚ã®ã‚’ä¿æŒã—ã€ã“ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ç ´æ£„ã—ã¾ã™ã€‚", this);
             Destroy(gameObject);
             return;
         }
 
-        // ƒV[ƒ““à‚Ì‘S‚Ä‚ÌMapNodeƒRƒ“ƒ|[ƒlƒ“ƒg‚ğŒŸõ‚µA«‘‚É“o˜^‚µ‚Ü‚·B
+        // ã‚·ãƒ¼ãƒ³å†…ã®å…¨ã¦ã®MapNodeã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’æ¤œç´¢ã—ã€è¾æ›¸ã«ç™»éŒ²ã—ã¾ã™ã€‚
         MapNode[] nodesInScene = FindObjectsByType<MapNode>(FindObjectsSortMode.None);
         foreach (MapNode node in nodesInScene)
         {
             if (allNodes.ContainsKey(node.NodeId))
             {
-                // “¯‚¶ID‚Ìƒm[ƒh‚ª•¡”‘¶İ‚·‚éê‡AƒGƒ‰[‚ğo—Í‚µ‚Ü‚·B
-                Debug.LogError($"[MapPathManager] d•¡‚·‚éƒm[ƒhID‚ªŒ©‚Â‚©‚è‚Ü‚µ‚½: '{node.NodeId}'BGameObject: '{node.name}' ‚Æ '{allNodes[node.NodeId].name}'", node);
+                // åŒã˜IDã®ãƒãƒ¼ãƒ‰ãŒè¤‡æ•°å­˜åœ¨ã™ã‚‹å ´åˆã€ã‚¨ãƒ©ãƒ¼ã‚’å‡ºåŠ›ã—ã¾ã™ã€‚
+                Debug.LogError($"[MapPathManager] é‡è¤‡ã™ã‚‹ãƒãƒ¼ãƒ‰IDãŒè¦‹ã¤ã‹ã‚Šã¾ã—ãŸ: '{node.NodeId}'ã€‚GameObject: '{node.name}' ã¨ '{allNodes[node.NodeId].name}'", node);
                 continue;
             }
             allNodes.Add(node.NodeId, node);
-            Debug.Log($"[MapPathManager] ƒm[ƒh‚ğ“o˜^‚µ‚Ü‚µ‚½: ID='{node.NodeId}', –¼‘O='{node.name}'");
+            Debug.Log($"[MapPathManager] ãƒãƒ¼ãƒ‰ã‚’ç™»éŒ²ã—ã¾ã—ãŸ: ID='{node.NodeId}', åå‰='{node.name}'");
         }
 
-        // Šeƒm[ƒh‚ÌÚ‘±ID‚ªÀÛ‚É‘¶İ‚·‚éƒm[ƒhID‚Å‚ ‚é‚©Šm”F‚·‚éiƒfƒoƒbƒO—pj
+        // å„ãƒãƒ¼ãƒ‰ã®æ¥ç¶šIDãŒå®Ÿéš›ã«å­˜åœ¨ã™ã‚‹ãƒãƒ¼ãƒ‰IDã§ã‚ã‚‹ã‹ç¢ºèªã™ã‚‹ï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨ï¼‰
         CheckNodeConnections();
     }
 
     /// <summary>
-    /// w’è‚³‚ê‚½ƒm[ƒhID‚É‘Î‰‚·‚éMapNodeƒRƒ“ƒ|[ƒlƒ“ƒg‚ğæ“¾‚µ‚Ü‚·B
+    /// æŒ‡å®šã•ã‚ŒãŸãƒãƒ¼ãƒ‰IDã«å¯¾å¿œã™ã‚‹MapNodeã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—ã—ã¾ã™ã€‚
     /// </summary>
-    /// <param name="nodeId">æ“¾‚µ‚½‚¢ƒm[ƒh‚ÌIDB</param>
-    /// <returns>w’è‚³‚ê‚½ID‚ÌMapNodeAŒ©‚Â‚©‚ç‚È‚¢ê‡‚ÍnullB</returns>
+    /// <param name="nodeId">å–å¾—ã—ãŸã„ãƒãƒ¼ãƒ‰ã®IDã€‚</param>
+    /// <returns>æŒ‡å®šã•ã‚ŒãŸIDã®MapNodeã€è¦‹ã¤ã‹ã‚‰ãªã„å ´åˆã¯nullã€‚</returns>
     public MapNode GetNode(string nodeId)
     {
         MapNode node;
@@ -67,28 +67,28 @@ public class MapPathManager : MonoBehaviour
         {
             return node;
         }
-        Debug.LogWarning($"[MapPathManager] ƒm[ƒhID '{nodeId}' ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½B", this);
+        Debug.LogWarning($"[MapPathManager] ãƒãƒ¼ãƒ‰ID '{nodeId}' ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚", this);
         return null;
     }
 
     /// <summary>
-    /// ‘S‚Ä‚Ìƒm[ƒh‚ÌÚ‘±İ’è‚ª³‚µ‚¢‚©iÚ‘±æID‚ª‘¶İ‚·‚é‚©j‚ğƒ`ƒFƒbƒN‚µ‚Ü‚·B
-    /// ƒfƒoƒbƒO–Ú“I‚Åg—p‚µ‚Ü‚·B
+    /// å…¨ã¦ã®ãƒãƒ¼ãƒ‰ã®æ¥ç¶šè¨­å®šãŒæ­£ã—ã„ã‹ï¼ˆæ¥ç¶šå…ˆIDãŒå­˜åœ¨ã™ã‚‹ã‹ï¼‰ã‚’ãƒã‚§ãƒƒã‚¯ã—ã¾ã™ã€‚
+    /// ãƒ‡ãƒãƒƒã‚°ç›®çš„ã§ä½¿ç”¨ã—ã¾ã™ã€‚
     /// </summary>
     private void CheckNodeConnections()
     {
         foreach (var entry in allNodes)
         {
             MapNode currentNode = entry.Value;
-            // MapNodeƒNƒ‰ƒX‚Ì GetConnectedNodeIds() ƒƒ\ƒbƒh‚ğg—p
-            foreach (string connectedId in currentNode.GetConnectedNodeIds()) // ‚±‚±‚ğC³
+            // MapNodeã‚¯ãƒ©ã‚¹ã® GetConnectedNodeIds() ãƒ¡ã‚½ãƒƒãƒ‰ã‚’ä½¿ç”¨
+            foreach (string connectedId in currentNode.GetConnectedNodeIds()) // ã“ã“ã‚’ä¿®æ­£
             {
                 if (!allNodes.ContainsKey(connectedId))
                 {
-                    Debug.LogWarning($"[MapPathManager] ƒm[ƒh '{currentNode.NodeId}' (GameObject: {currentNode.gameObject.name}) ‚ÌÚ‘±æƒm[ƒhID '{connectedId}' ‚ª‘¶İ‚µ‚Ü‚¹‚ñBÚ‘±‚ğíœ‚·‚é‚©Aƒm[ƒh‚ğì¬‚µ‚Ä‚­‚¾‚³‚¢B", currentNode);
+                    Debug.LogWarning($"[MapPathManager] ãƒãƒ¼ãƒ‰ '{currentNode.NodeId}' (GameObject: {currentNode.gameObject.name}) ã®æ¥ç¶šå…ˆãƒãƒ¼ãƒ‰ID '{connectedId}' ãŒå­˜åœ¨ã—ã¾ã›ã‚“ã€‚æ¥ç¶šã‚’å‰Šé™¤ã™ã‚‹ã‹ã€ãƒãƒ¼ãƒ‰ã‚’ä½œæˆã—ã¦ãã ã•ã„ã€‚", currentNode);
                 }
             }
         }
-        Debug.Log("[MapPathManager] ƒm[ƒhÚ‘±‚Ì®‡«ƒ`ƒFƒbƒN‚ªŠ®—¹‚µ‚Ü‚µ‚½B");
+        Debug.Log("[MapPathManager] ãƒãƒ¼ãƒ‰æ¥ç¶šã®æ•´åˆæ€§ãƒã‚§ãƒƒã‚¯ãŒå®Œäº†ã—ã¾ã—ãŸã€‚");
     }
 }

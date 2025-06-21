@@ -1,116 +1,116 @@
-// MapBoundsClamper.cs
-// ���̃X�N���v�g�́A���[���h�}�b�v��RectTransform��anchoredPosition�𐧌����A
-// �}�b�v����ʂ̕\���͈͂𒴂��Ĉړ����Ȃ��悤�ɃN�����v����@�\��񋟂��܂��B
-// �Y�[���X�P�[���Ɖ�ʉ𑜓x���l�����āA���I�ɔ͈͂��v�Z���܂��B
+﻿// MapBoundsClamper.cs 
+// このスクリプトは、ワールドマップのRectTransformのanchoredPositionを制限し、
+// マップが画面の表示範囲を超えて移動しないようにクランプする機能を提供します。
+// ズームスケールと画面解像度を考慮して、動的に範囲を計算します。
 
 using UnityEngine;
-using UnityEngine.UI; // RectTransform���g�p���邽�߂ɕK�v
+using UnityEngine.UI; // RectTransformを使用するために必要
 
 public class MapBoundsClamper : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private RectTransform worldMapRawImageRectTransform; // �N�����v�Ώۂ̃��[���h�}�b�vRawImage��RectTransform
+    [SerializeField] private RectTransform worldMapRawImageRectTransform; // クランプ対象のワールドマップRawImageのRectTransform
 
-    // �}�b�v�̃I���W�i���T�C�Y (�v���Ɋ�Â�2048x2048�Ɖ���)
+    // マップのオリジナルサイズ (要件に基づき2048x2048と仮定)
     private const float MAP_ORIGINAL_WIDTH = 2048f;
     private const float MAP_ORIGINAL_HEIGHT = 2048f;
 
     /// <summary>
-    /// Start�͍ŏ��̃t���[���X�V�̑O�ɌĂяo����܂��B
-    /// �K�v�ȎQ�Ƃ̊m�F�ƁA�����ʒu�̃N�����v���s���܂��B
+    /// Startは最初のフレーム更新の前に呼び出されます。
+    /// 必要な参照の確認と、初期位置のクランプを行います。
     /// </summary>
     void Start()
     {
-        // �N�����v�Ώۂ�RectTransform���A�T�C������Ă��邩�m�F
+        // クランプ対象のRectTransformがアサインされているか確認
         if (worldMapRawImageRectTransform == null)
         {
-            Debug.LogError("[MapBoundsClamper] World Map Raw Image Rect Transform���A�T�C������Ă��܂���IInspector�Őݒ肵�Ă��������B", this);
-            enabled = false; // �X�N���v�g�𖳌��ɂ���
+            Debug.LogError("[MapBoundsClamper] World Map Raw Image Rect Transformがアサインされていません！Inspectorで設定してください。", this);
+            enabled = false; // スクリプトを無効にする
             return;
         }
 
-        // �������[�h���Ƀ}�b�v�ʒu���N�����v���A�}�b�v���͈͓��Ɏ��܂�悤�ɂ��܂��B
+        // 初期ロード時にマップ位置をクランプし、マップが範囲内に収まるようにします。
         ClampMapPosition();
 
-        Debug.Log("[MapBoundsClamper] �X�N���v�g���J�n����܂����B");
+        Debug.Log("[MapBoundsClamper] スクリプトが開始されました。");
     }
 
     /// <summary>
-    /// Update�͖��t���[���Ăяo����܂��B
-    /// �h���b�O�ȂǂŃ}�b�v�̈ʒu���ύX�����\��������̂ŁA��Ɉʒu���N�����v���܂��B
+    /// Updateは毎フレーム呼び出されます。
+    /// ドラッグなどでマップの位置が変更される可能性があるので、常に位置をクランプします。
     /// </summary>
     void Update()
     {
-        // ���t���[���A�}�b�v�̈ʒu���͈͓��Ɏ��܂��Ă��邩�m�F���A�K�v�ł���ΏC�����܂��B
-        // ����ɂ��A�h���b�O�ゾ���łȂ��A�Y�[���Ȃǂňʒu���͈͊O�ɏo���ꍇ�������I�ɏC������܂��B
+        // 毎フレーム、マップの位置が範囲内に収まっているか確認し、必要であれば修正します。
+        // これにより、ドラッグ後だけでなく、ズームなどで位置が範囲外に出た場合も自動的に修正されます。
         ClampMapPosition();
     }
 
     /// <summary>
-    /// �}�b�v��RectTransform��anchoredPosition���A�}�b�v�̕\���͈͓��ɐ������܂��B
-    /// ���݂̃Y�[���X�P�[���Ɖ�ʃT�C�Y���l�����܂��B
+    /// マップのRectTransformのanchoredPositionを、マップの表示範囲内に制限します。
+    /// 現在のズームスケールと画面サイズを考慮します。
     /// </summary>
     public void ClampMapPosition()
     {
-        // ���݂̃}�b�v�̃X�P�[�����擾���܂��B
-        // MapZoomController�ɂ����localScale���ύX����Ă��邱�Ƃ�z�肵�܂��B
+        // 現在のマップのスケールを取得します。
+        // MapZoomControllerによってlocalScaleが変更されていることを想定します。
         float currentScale = worldMapRawImageRectTransform.localScale.x;
 
-        // �e��RectTransform�iWorldMapPanel�j�̃T�C�Y���擾���܂��B���ꂪ��ʂ̕\���͈͂ɑ������܂��B
-        // MapBoundsClamper��WorldMapPanel�ɃA�^�b�`����邽�߁A���g��RectTransform�̐e���l�����܂��B
+        // 親のRectTransform（WorldMapPanel）のサイズを取得します。これが画面の表示範囲に相当します。
+        // MapBoundsClamperはWorldMapPanelにアタッチされるため、自身のRectTransformの親を考慮します。
         RectTransform parentRect = worldMapRawImageRectTransform.parent.GetComponent<RectTransform>();
         if (parentRect == null)
         {
-            Debug.LogError("[MapBoundsClamper] �e��RectTransform��������܂���B�}�b�v�̈ʒu�������ł��܂���B", this);
+            Debug.LogError("[MapBoundsClamper] 親のRectTransformが見つかりません。マップの位置制限ができません。", this);
             return;
         }
 
         float screenWidth = parentRect.rect.width;
         float screenHeight = parentRect.rect.height;
 
-        // �X�P�[����̃}�b�v�̎��ۂ̃s�N�Z���T�C�Y���v�Z���܂��B
+        // スケール後のマップの実際のピクセルサイズを計算します。
         float scaledMapWidth = MAP_ORIGINAL_WIDTH * currentScale;
         float scaledMapHeight = MAP_ORIGINAL_HEIGHT * currentScale;
 
-        // �}�b�v��anchoredPosition����蓾��ŏ��l�ƍő�l���v�Z���܂��B
-        // �����̒l�́A�}�b�v�̒[����ʂ̒[�ɂ҂����荇���Ƃ���anchoredPosition�ł��B
-        // Unity UI��anchoredPosition�͐e�̒��S��(0,0)�Ƃ��邽�߁A���̓_���l�����܂��B
+        // マップのanchoredPositionが取り得る最小値と最大値を計算します。
+        // これらの値は、マップの端が画面の端にぴったり合うときのanchoredPositionです。
+        // Unity UIのanchoredPositionは親の中心を(0,0)とするため、その点を考慮します。
 
-        // X���̃N�����v�͈�
-        // ��: �}�b�v��2048�A��ʕ�1920�A�X�P�[��1.0�̏ꍇ
+        // X軸のクランプ範囲
+        // 例: マップ幅2048、画面幅1920、スケール1.0の場合
         // scaledMapWidth = 2048, screenWidth = 1920
-        // maxPossibleX = (2048 - 1920) / 2 = 64 (�}�b�v���[����ʍ��[�ɗ���ő��X�l)
-        // minPossibleX = -(2048 - 1920) / 2 = -64 (�}�b�v�E�[����ʉE�[�ɗ���ŏ���X�l)
+        // maxPossibleX = (2048 - 1920) / 2 = 64 (マップ左端が画面左端に来る最大のX値)
+        // minPossibleX = -(2048 - 1920) / 2 = -64 (マップ右端が画面右端に来る最小のX値)
         float maxPossibleX = (scaledMapWidth - screenWidth) / 2f;
         float minPossibleX = -maxPossibleX;
 
-        // Y���̃N�����v�͈�
+        // Y軸のクランプ範囲
         float maxPossibleY = (scaledMapHeight - screenHeight) / 2f;
         float minPossibleY = -maxPossibleY;
 
-        // �}�b�v����ʃT�C�Y�����������ꍇ�̒���
-        // �}�b�v����ʂɎ��܂�ꍇ�́A�����ɌŒ肵�܂��B
+        // マップが画面サイズよりも小さい場合の調整
+        // マップが画面に収まる場合は、中央に固定します。
         if (scaledMapWidth < screenWidth)
         {
-            minPossibleX = 0; // �����Œ�
-            maxPossibleX = 0; // �����Œ�
+            minPossibleX = 0; // 中央固定
+            maxPossibleX = 0; // 中央固定
         }
         if (scaledMapHeight < screenHeight)
         {
-            minPossibleY = 0; // �����Œ�
-            maxPossibleY = 0; // �����Œ�
+            minPossibleY = 0; // 中央固定
+            maxPossibleY = 0; // 中央固定
         }
 
-        // ���݂̃}�b�v�̈ʒu���擾���܂��B
+        // 現在のマップの位置を取得します。
         Vector2 currentAnchoredPos = worldMapRawImageRectTransform.anchoredPosition;
 
-        // X��Y�̂��ꂼ����v�Z���ꂽ�͈͂ɃN�����v���܂��B
+        // XとYのそれぞれを計算された範囲にクランプします。
         float clampedX = Mathf.Clamp(currentAnchoredPos.x, minPossibleX, maxPossibleX);
         float clampedY = Mathf.Clamp(currentAnchoredPos.y, minPossibleY, maxPossibleY);
 
-        // �N�����v���ꂽ�ʒu���}�b�v��anchoredPosition�ɐݒ肵�܂��B
+        // クランプされた位置をマップのanchoredPositionに設定します。
         worldMapRawImageRectTransform.anchoredPosition = new Vector2(clampedX, clampedY);
 
-        //Debug.Log($"[MapBoundsClamper] �}�b�v�ʒu���N�����v���܂����B���݂̈ʒu: {currentAnchoredPos}, �N�����v��̈ʒu: {worldMapRawImageRectTransform.anchoredPosition}");
+        //Debug.Log($"[MapBoundsClamper] マップ位置をクランプしました。現在の位置: {currentAnchoredPos}, クランプ後の位置: {worldMapRawImageRectTransform.anchoredPosition}");
     }
 }

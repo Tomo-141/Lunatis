@@ -1,84 +1,84 @@
-// PlayerMapMovementController.cs
-// ‚±‚ÌƒXƒNƒŠƒvƒg‚ÍAƒ}ƒbƒvã‚ÌƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ÌˆÊ’uŠÇ—‚ÆA
-// ƒm[ƒhŠÔ‚ÌƒAƒjƒ[ƒVƒ‡ƒ“ˆÚ“®i‘¬“xƒx[ƒXj‚ğ§Œä‚µ‚Ü‚·B
-// MapInteractionHandler‚©‚ç‚ÌˆÚ“®—v‹‚ğó‚¯æ‚èAMapPathManager‚ÆPlayerLocationSetter‚Æ˜AŒg‚µ‚Ü‚·B
+ï»¿// PlayerMapMovementController.cs 
+// ã“ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã¯ã€ãƒãƒƒãƒ—ä¸Šã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã®ä½ç½®ç®¡ç†ã¨ã€
+// ãƒãƒ¼ãƒ‰é–“ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç§»å‹•ï¼ˆé€Ÿåº¦ãƒ™ãƒ¼ã‚¹ï¼‰ã‚’åˆ¶å¾¡ã—ã¾ã™ã€‚
+// MapInteractionHandlerã‹ã‚‰ã®ç§»å‹•è¦æ±‚ã‚’å—ã‘å–ã‚Šã€MapPathManagerã¨PlayerLocationSetterã¨é€£æºã—ã¾ã™ã€‚
 
 using UnityEngine;
-using UnityEngine.UI; // RectTransform‚ğg—p‚·‚é‚½‚ß‚É•K—v
-using System.Collections; // ƒRƒ‹[ƒ`ƒ“‚ğg—p‚·‚é‚½‚ß‚É•K—v
-using System.Linq; // Contains() ‚ğg—p‚·‚é‚½‚ß‚É•K—v
+using UnityEngine.UI; // RectTransformã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚ã«å¿…è¦
+using System.Collections; // ã‚³ãƒ«ãƒ¼ãƒãƒ³ã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚ã«å¿…è¦
+using System.Linq; // Contains() ã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚ã«å¿…è¦
 
 public class PlayerMapMovementController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] public RectTransform playerIconRectTransform;     // ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ÌRectTransform (public‚É‚µ‚ÄMapInteractionHandler‚©‚çQÆ‚Å‚«‚é‚æ‚¤‚É)
-    [SerializeField] private PlayerLocationSetter playerLocationSetter; // PlayerLocationSetter‚Ö‚ÌQÆ
-    [SerializeField] private MapInteractionHandler mapInteractionHandler; // MapInteractionHandler‚Ö‚ÌQÆ (ƒZƒ“ƒ^ƒŠƒ“ƒO‚ğŒÄ‚Ño‚·‚½‚ß)
+    [SerializeField] public RectTransform playerIconRectTransform;     // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã®RectTransform (publicã«ã—ã¦MapInteractionHandlerã‹ã‚‰å‚ç…§ã§ãã‚‹ã‚ˆã†ã«)
+    [SerializeField] private PlayerLocationSetter playerLocationSetter; // PlayerLocationSetterã¸ã®å‚ç…§
+    [SerializeField] private MapInteractionHandler mapInteractionHandler; // MapInteractionHandlerã¸ã®å‚ç…§ (ã‚»ãƒ³ã‚¿ãƒªãƒ³ã‚°ã‚’å‘¼ã³å‡ºã™ãŸã‚)
 
     [Header("Player Initial Position")]
-    [Tooltip("ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚Ì‰ŠúˆÊ’u‚Æ‚µ‚Äİ’è‚·‚éƒm[ƒh‚ÌIDB")]
-    [SerializeField] private string initialPlayerNodeId = "TownA"; // —á: ‰ŠúˆÊ’u‚ğTownA‚Éİ’è
+    [Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã®åˆæœŸä½ç½®ã¨ã—ã¦è¨­å®šã™ã‚‹ãƒãƒ¼ãƒ‰ã®IDã€‚")]
+    [SerializeField] private string initialPlayerNodeId = "TownA"; // ä¾‹: åˆæœŸä½ç½®ã‚’TownAã«è¨­å®š
 
     [Header("Current Player Node")]
-    [Tooltip("ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ªŒ»İ‚¢‚éƒm[ƒh‚ÌIDB")]
-    public string currentPlayerNodeId; // Œ»İƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ª‚¢‚éƒm[ƒh‚ÌID
+    [Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ãŒç¾åœ¨ã„ã‚‹ãƒãƒ¼ãƒ‰ã®IDã€‚")]
+    public string currentPlayerNodeId; // ç¾åœ¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ãŒã„ã‚‹ãƒãƒ¼ãƒ‰ã®ID
 
     [Header("Player Movement Settings")]
-    [Tooltip("ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ªƒm[ƒhŠÔ‚ğˆÚ“®‚·‚é‘¬“xi’PˆÊ: ƒsƒNƒZƒ‹/•bjB")]
-    [SerializeField] private float moveSpeed = 300f; // ˆÚ“®ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì‘¬“xiƒsƒNƒZƒ‹/•bj
-    [Tooltip("ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ÌˆÚ“®Š®—¹ŒãA‹“_‚ªƒZƒ“ƒ^ƒŠƒ“ƒO‚³‚ê‚é‚Ü‚Å‚Ì’x‰„ŠÔi•bjB")]
-    [SerializeField] private float centerViewDelay = 0.5f; // ƒZƒ“ƒ^ƒŠƒ“ƒO‚Ü‚Å‚Ì’x‰„ŠÔ
-    [Tooltip("ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ÌˆÚ“®Š®—¹ŒãA©“®“I‚É‰æ–Ê‚ğƒZƒ“ƒ^ƒŠƒ“ƒO‚·‚é‚©‚Ç‚¤‚©B")]
-    [SerializeField] private bool shouldCenterViewAfterMove = true; // ƒZƒ“ƒ^ƒŠƒ“ƒO‹@”\‚ÌƒIƒ“ƒIƒt
+    [Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ãŒãƒãƒ¼ãƒ‰é–“ã‚’ç§»å‹•ã™ã‚‹é€Ÿåº¦ï¼ˆå˜ä½: ãƒ”ã‚¯ã‚»ãƒ«/ç§’ï¼‰ã€‚")]
+    [SerializeField] private float moveSpeed = 300f; // ç§»å‹•ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®é€Ÿåº¦ï¼ˆãƒ”ã‚¯ã‚»ãƒ«/ç§’ï¼‰
+    [Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã®ç§»å‹•å®Œäº†å¾Œã€è¦–ç‚¹ãŒã‚»ãƒ³ã‚¿ãƒªãƒ³ã‚°ã•ã‚Œã‚‹ã¾ã§ã®é…å»¶æ™‚é–“ï¼ˆç§’ï¼‰ã€‚")]
+    [SerializeField] private float centerViewDelay = 0.5f; // ã‚»ãƒ³ã‚¿ãƒªãƒ³ã‚°ã¾ã§ã®é…å»¶æ™‚é–“
+    [Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã®ç§»å‹•å®Œäº†å¾Œã€è‡ªå‹•çš„ã«ç”»é¢ã‚’ã‚»ãƒ³ã‚¿ãƒªãƒ³ã‚°ã™ã‚‹ã‹ã©ã†ã‹ã€‚")]
+    [SerializeField] private bool shouldCenterViewAfterMove = true; // ã‚»ãƒ³ã‚¿ãƒªãƒ³ã‚°æ©Ÿèƒ½ã®ã‚ªãƒ³ã‚ªãƒ•
 
-    private bool isMoving = false; // ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ªˆÚ“®’†‚©‚Ç‚¤‚©‚ğ¦‚·ƒtƒ‰ƒO
+    private bool isMoving = false; // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ãŒç§»å‹•ä¸­ã‹ã©ã†ã‹ã‚’ç¤ºã™ãƒ•ãƒ©ã‚°
 
     /// <summary>
-    /// Start‚ÍÅ‰‚ÌƒtƒŒ[ƒ€XV‚Ì‘O‚ÉŒÄ‚Ño‚³‚ê‚Ü‚·B
-    /// •K—v‚ÈQÆ‚ÌŠm”F‚ÆA‰ŠúˆÊ’u‚Ìİ’è‚ğs‚¢‚Ü‚·B
+    /// Startã¯æœ€åˆã®ãƒ•ãƒ¬ãƒ¼ãƒ æ›´æ–°ã®å‰ã«å‘¼ã³å‡ºã•ã‚Œã¾ã™ã€‚
+    /// å¿…è¦ãªå‚ç…§ã®ç¢ºèªã¨ã€åˆæœŸä½ç½®ã®è¨­å®šã‚’è¡Œã„ã¾ã™ã€‚
     /// </summary>
     void Start()
     {
-        // •K—v‚ÈQÆ‚ªİ’è‚³‚ê‚Ä‚¢‚é‚©Šm”F
+        // å¿…è¦ãªå‚ç…§ãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèª
         if (playerIconRectTransform == null)
         {
-            Debug.LogError("[PlayerMapMovementController] ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ÌRect Transform‚ªƒAƒTƒCƒ“‚³‚ê‚Ä‚¢‚Ü‚¹‚ñIInspector‚Åİ’è‚µ‚Ä‚­‚¾‚³‚¢B", this);
+            Debug.LogError("[PlayerMapMovementController] ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã®Rect TransformãŒã‚¢ã‚µã‚¤ãƒ³ã•ã‚Œã¦ã„ã¾ã›ã‚“ï¼Inspectorã§è¨­å®šã—ã¦ãã ã•ã„ã€‚", this);
             enabled = false;
             return;
         }
         if (playerLocationSetter == null)
         {
-            Debug.LogError("[PlayerMapMovementController] Player Location Setter‚ªƒAƒTƒCƒ“‚³‚ê‚Ä‚¢‚Ü‚¹‚ñIInspector‚Åİ’è‚µ‚Ä‚­‚¾‚³‚¢B", this);
+            Debug.LogError("[PlayerMapMovementController] Player Location SetterãŒã‚¢ã‚µã‚¤ãƒ³ã•ã‚Œã¦ã„ã¾ã›ã‚“ï¼Inspectorã§è¨­å®šã—ã¦ãã ã•ã„ã€‚", this);
             enabled = false;
             return;
         }
         if (MapPathManager.Instance == null)
         {
-            Debug.LogError("[PlayerMapMovementController] MapPathManager‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñBƒV[ƒ“‚ÉMapPathManager‚ğƒAƒ^ƒbƒ`‚µ‚½GameObject‚ª‚ ‚é‚©Šm”F‚µ‚Ä‚­‚¾‚³‚¢B", this);
+            Debug.LogError("[PlayerMapMovementController] MapPathManagerã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚ã‚·ãƒ¼ãƒ³ã«MapPathManagerã‚’ã‚¢ã‚¿ãƒƒãƒã—ãŸGameObjectãŒã‚ã‚‹ã‹ç¢ºèªã—ã¦ãã ã•ã„ã€‚", this);
             enabled = false;
             return;
         }
         if (mapInteractionHandler == null)
         {
-            Debug.LogError("[PlayerMapMovementController] Map Interaction Handler‚ªƒAƒTƒCƒ“‚³‚ê‚Ä‚¢‚Ü‚¹‚ñIInspector‚Åİ’è‚µ‚Ä‚­‚¾‚³‚¢B", this);
+            Debug.LogError("[PlayerMapMovementController] Map Interaction HandlerãŒã‚¢ã‚µã‚¤ãƒ³ã•ã‚Œã¦ã„ã¾ã›ã‚“ï¼Inspectorã§è¨­å®šã—ã¦ãã ã•ã„ã€‚", this);
             enabled = false;
             return;
         }
 
-        // ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚Ì‰ŠúˆÊ’u‚ğİ’èiƒAƒjƒ[ƒVƒ‡ƒ“‚È‚µ‚Å‘¦İ’èj
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã®åˆæœŸä½ç½®ã‚’è¨­å®šï¼ˆã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãªã—ã§å³æ™‚è¨­å®šï¼‰
         SetPlayerPositionInstant(initialPlayerNodeId);
 
-        // ‰Šú•\¦‚Í‘¦ƒZƒ“ƒ^ƒŠƒ“ƒOiƒAƒjƒ[ƒVƒ‡ƒ“‚È‚µj
+        // åˆæœŸè¡¨ç¤ºã¯å³æ™‚ã‚»ãƒ³ã‚¿ãƒªãƒ³ã‚°ï¼ˆã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãªã—ï¼‰
         mapInteractionHandler.CenterViewOnPlayerIcon(instant: true);
 
-        Debug.Log("[PlayerMapMovementController] ƒXƒNƒŠƒvƒg‚ªŠJn‚³‚ê‚Ü‚µ‚½B");
+        Debug.Log("[PlayerMapMovementController] ã‚¹ã‚¯ãƒªãƒ—ãƒˆãŒé–‹å§‹ã•ã‚Œã¾ã—ãŸã€‚");
     }
 
     /// <summary>
-    /// ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ğAw’è‚³‚ê‚½ƒm[ƒh‚ÌˆÊ’u‚ÉƒAƒjƒ[ƒVƒ‡ƒ“‚È‚µ‚Å‘¦İ’è‚µ‚Ü‚·B
-    /// ‰Šúİ’è—pB
+    /// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã‚’ã€æŒ‡å®šã•ã‚ŒãŸãƒãƒ¼ãƒ‰ã®ä½ç½®ã«ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãªã—ã§å³æ™‚è¨­å®šã—ã¾ã™ã€‚
+    /// åˆæœŸè¨­å®šç”¨ã€‚
     /// </summary>
-    /// <param name="nodeId">İ’èæ‚Æ‚µ‚Äİ’è‚·‚éƒm[ƒh‚ÌIDB</param>
+    /// <param name="nodeId">è¨­å®šå…ˆã¨ã—ã¦è¨­å®šã™ã‚‹ãƒãƒ¼ãƒ‰ã®IDã€‚</param>
     private void SetPlayerPositionInstant(string nodeId)
     {
         RectTransform targetNodeRectTransform = playerLocationSetter.GetTargetNodeRectTransform(nodeId);
@@ -87,92 +87,92 @@ public class PlayerMapMovementController : MonoBehaviour
         {
             playerIconRectTransform.anchoredPosition = targetNodeRectTransform.anchoredPosition;
             currentPlayerNodeId = nodeId;
-            Debug.Log($"[PlayerMapMovementController] ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ğƒm[ƒh '{nodeId}' ‚ÌˆÊ’u‚É‘¦İ’è‚µ‚Ü‚µ‚½BŒ»İ‚Ìƒm[ƒh: {currentPlayerNodeId}");
+            Debug.Log($"[PlayerMapMovementController] ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã‚’ãƒãƒ¼ãƒ‰ '{nodeId}' ã®ä½ç½®ã«å³æ™‚è¨­å®šã—ã¾ã—ãŸã€‚ç¾åœ¨ã®ãƒãƒ¼ãƒ‰: {currentPlayerNodeId}");
         }
         else
         {
-            Debug.LogWarning($"[PlayerMapMovementController] w’è‚³‚ê‚½ƒm[ƒhID '{nodeId}' ‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½‚½‚ßAƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ÌˆÊ’u‚Í•ÏX‚³‚ê‚Ü‚¹‚ñ‚Å‚µ‚½.", this);
+            Debug.LogWarning($"[PlayerMapMovementController] æŒ‡å®šã•ã‚ŒãŸãƒãƒ¼ãƒ‰ID '{nodeId}' ãŒè¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸãŸã‚ã€ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã®ä½ç½®ã¯å¤‰æ›´ã•ã‚Œã¾ã›ã‚“ã§ã—ãŸ.", this);
         }
     }
 
     /// <summary>
-    /// w’è‚³‚ê‚½ƒm[ƒhID‚ÖƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ğˆÚ“®‚³‚¹‚éŒöŠJƒƒ\ƒbƒhB
-    /// MapInteractionHandler‚©‚çŒÄ‚Ño‚³‚ê‚Ü‚·B
+    /// æŒ‡å®šã•ã‚ŒãŸãƒãƒ¼ãƒ‰IDã¸ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã‚’ç§»å‹•ã•ã›ã‚‹å…¬é–‹ãƒ¡ã‚½ãƒƒãƒ‰ã€‚
+    /// MapInteractionHandlerã‹ã‚‰å‘¼ã³å‡ºã•ã‚Œã¾ã™ã€‚
     /// </summary>
-    /// <param name="targetNodeId">ˆÚ“®æ‚Ìƒm[ƒhIDB</param>
-    /// <returns>ˆÚ“®‚ğŠJn‚Å‚«‚½ê‡‚ÍtrueAˆÚ“®’†‚Ì‚½‚ßŠJn‚Å‚«‚È‚©‚Á‚½ê‡‚ÍfalseB</returns>
+    /// <param name="targetNodeId">ç§»å‹•å…ˆã®ãƒãƒ¼ãƒ‰IDã€‚</param>
+    /// <returns>ç§»å‹•ã‚’é–‹å§‹ã§ããŸå ´åˆã¯trueã€ç§»å‹•ä¸­ã®ãŸã‚é–‹å§‹ã§ããªã‹ã£ãŸå ´åˆã¯falseã€‚</returns>
     public bool TryMovePlayerToNode(string targetNodeId)
     {
-        // ƒvƒŒƒCƒ„[‚ªˆÚ“®’†‚Ìê‡‚ÍAV‚µ‚¢ˆÚ“®ƒŠƒNƒGƒXƒg‚ğ–³‹‚·‚é
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒç§»å‹•ä¸­ã®å ´åˆã¯ã€æ–°ã—ã„ç§»å‹•ãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’ç„¡è¦–ã™ã‚‹
         if (isMoving)
         {
-            Debug.Log($"[PlayerMapMovementController] ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ªˆÚ“®’†‚Ì‚½‚ßAˆÚ“®ƒŠƒNƒGƒXƒg '{targetNodeId}' ‚ğ–³‹‚µ‚Ü‚µ‚½B", this);
+            Debug.Log($"[PlayerMapMovementController] ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ãŒç§»å‹•ä¸­ã®ãŸã‚ã€ç§»å‹•ãƒªã‚¯ã‚¨ã‚¹ãƒˆ '{targetNodeId}' ã‚’ç„¡è¦–ã—ã¾ã—ãŸã€‚", this);
             return false;
         }
 
-        // Œ»İ‚ÌƒvƒŒƒCƒ„[ƒm[ƒhî•ñ‚ğæ“¾
+        // ç¾åœ¨ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒãƒ¼ãƒ‰æƒ…å ±ã‚’å–å¾—
         MapNode currentPlayerNode = MapPathManager.Instance.GetNode(currentPlayerNodeId);
 
         if (currentPlayerNode == null)
         {
-            Debug.LogError($"[PlayerMapMovementController] Œ»İ‚ÌƒvƒŒƒCƒ„[ƒm[ƒh '{currentPlayerNodeId}' ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñBˆÚ“®‚Å‚«‚Ü‚¹‚ñB", this);
+            Debug.LogError($"[PlayerMapMovementController] ç¾åœ¨ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒãƒ¼ãƒ‰ '{currentPlayerNodeId}' ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚ç§»å‹•ã§ãã¾ã›ã‚“ã€‚", this);
             return false;
         }
 
-        // ƒNƒŠƒbƒN‚³‚ê‚½ƒm[ƒh‚ªŒ»İ‚Ìƒm[ƒh‚Ì—×Úƒm[ƒh‚Å‚ ‚é‚©‚ğŠm”F
+        // ã‚¯ãƒªãƒƒã‚¯ã•ã‚ŒãŸãƒãƒ¼ãƒ‰ãŒç¾åœ¨ã®ãƒãƒ¼ãƒ‰ã®éš£æ¥ãƒãƒ¼ãƒ‰ã§ã‚ã‚‹ã‹ã‚’ç¢ºèª
         if (currentPlayerNode.GetConnectedNodeIds().Contains(targetNodeId))
         {
-            // —×Úƒm[ƒh‚Å‚ ‚ê‚ÎˆÚ“®ƒAƒjƒ[ƒVƒ‡ƒ“‚ğŠJn
+            // éš£æ¥ãƒãƒ¼ãƒ‰ã§ã‚ã‚Œã°ç§»å‹•ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é–‹å§‹
             StartCoroutine(MovePlayerIconAnimated(targetNodeId));
             return true;
         }
         else
         {
-            Debug.LogWarning($"[PlayerMapMovementController] ƒm[ƒh '{targetNodeId}' ‚ÍŒ»İ‚Ìƒm[ƒh '{currentPlayerNodeId}' ‚É’¼ÚÚ‘±‚³‚ê‚Ä‚¢‚Ü‚¹‚ñBˆÚ“®‚Å‚«‚Ü‚¹‚ñB", this);
+            Debug.LogWarning($"[PlayerMapMovementController] ãƒãƒ¼ãƒ‰ '{targetNodeId}' ã¯ç¾åœ¨ã®ãƒãƒ¼ãƒ‰ '{currentPlayerNodeId}' ã«ç›´æ¥æ¥ç¶šã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚ç§»å‹•ã§ãã¾ã›ã‚“ã€‚", this);
             return false;
         }
     }
 
     /// <summary>
-    /// ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ğw’è‚³‚ê‚½ƒm[ƒh‚ÖƒAƒjƒ[ƒVƒ‡ƒ“‚ÅˆÚ“®‚³‚¹‚Ü‚·B
+    /// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã‚’æŒ‡å®šã•ã‚ŒãŸãƒãƒ¼ãƒ‰ã¸ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã§ç§»å‹•ã•ã›ã¾ã™ã€‚
     /// </summary>
-    /// <param name="targetNodeId">ˆÚ“®æ‚Ìƒm[ƒhIDB</param>
+    /// <param name="targetNodeId">ç§»å‹•å…ˆã®ãƒãƒ¼ãƒ‰IDã€‚</param>
     private IEnumerator MovePlayerIconAnimated(string targetNodeId)
     {
-        isMoving = true; // ˆÚ“®’†ƒtƒ‰ƒO‚ğ—§‚Ä‚é
+        isMoving = true; // ç§»å‹•ä¸­ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 
         RectTransform targetNodeRectTransform = playerLocationSetter.GetTargetNodeRectTransform(targetNodeId);
 
         if (targetNodeRectTransform == null)
         {
-            Debug.LogWarning($"[PlayerMapMovementController] ˆÚ“®æ‚Ìƒm[ƒhID '{targetNodeId}' ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½BˆÚ“®‚ğ’†’f‚µ‚Ü‚·B", this);
+            Debug.LogWarning($"[PlayerMapMovementController] ç§»å‹•å…ˆã®ãƒãƒ¼ãƒ‰ID '{targetNodeId}' ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚ç§»å‹•ã‚’ä¸­æ–­ã—ã¾ã™ã€‚", this);
             isMoving = false;
-            yield break; // ƒRƒ‹[ƒ`ƒ“‚ğI—¹
+            yield break; // ã‚³ãƒ«ãƒ¼ãƒãƒ³ã‚’çµ‚äº†
         }
 
         Vector2 startPosition = playerIconRectTransform.anchoredPosition;
         Vector2 endPosition = targetNodeRectTransform.anchoredPosition;
 
-        // –Ú•WˆÊ’u‚É“’B‚·‚é‚Ü‚Åƒ‹[ƒv
-        while (Vector2.Distance(playerIconRectTransform.anchoredPosition, endPosition) > 0.1f) // ‚ ‚é’ö“x‚ÌŒë·‚ğ‹–—e
+        // ç›®æ¨™ä½ç½®ã«åˆ°é”ã™ã‚‹ã¾ã§ãƒ«ãƒ¼ãƒ—
+        while (Vector2.Distance(playerIconRectTransform.anchoredPosition, endPosition) > 0.1f) // ã‚ã‚‹ç¨‹åº¦ã®èª¤å·®ã‚’è¨±å®¹
         {
-            // Œ»İˆÊ’u‚©‚ç–Ú•WˆÊ’u‚ÖAw’è‚³‚ê‚½‘¬“x‚ÅˆÚ“®
+            // ç¾åœ¨ä½ç½®ã‹ã‚‰ç›®æ¨™ä½ç½®ã¸ã€æŒ‡å®šã•ã‚ŒãŸé€Ÿåº¦ã§ç§»å‹•
             playerIconRectTransform.anchoredPosition = Vector2.MoveTowards(
                 playerIconRectTransform.anchoredPosition,
                 endPosition,
-                moveSpeed * Time.deltaTime // ‘¬“x * ƒfƒ‹ƒ^ƒ^ƒCƒ€ ‚Å1ƒtƒŒ[ƒ€‚ÌˆÚ“®‹——£‚ğŒvZ
+                moveSpeed * Time.deltaTime // é€Ÿåº¦ * ãƒ‡ãƒ«ã‚¿ã‚¿ã‚¤ãƒ  ã§1ãƒ•ãƒ¬ãƒ¼ãƒ ã®ç§»å‹•è·é›¢ã‚’è¨ˆç®—
             );
-            yield return null; // 1ƒtƒŒ[ƒ€‘Ò‹@
+            yield return null; // 1ãƒ•ãƒ¬ãƒ¼ãƒ å¾…æ©Ÿ
         }
 
-        // ˆÚ“®Š®—¹ŒãA³Šm‚ÈÅIˆÊ’u‚Éİ’è
+        // ç§»å‹•å®Œäº†å¾Œã€æ­£ç¢ºãªæœ€çµ‚ä½ç½®ã«è¨­å®š
         playerIconRectTransform.anchoredPosition = endPosition;
-        currentPlayerNodeId = targetNodeId; // Œ»İ‚Ìƒm[ƒhID‚ğXV
-        isMoving = false; // ˆÚ“®’†ƒtƒ‰ƒO‚ğ‰º‚ë‚·
+        currentPlayerNodeId = targetNodeId; // ç¾åœ¨ã®ãƒãƒ¼ãƒ‰IDã‚’æ›´æ–°
+        isMoving = false; // ç§»å‹•ä¸­ãƒ•ãƒ©ã‚°ã‚’ä¸‹ã‚ã™
 
-        Debug.Log($"[PlayerMapMovementController] ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ğ '{targetNodeId}' ‚ÉˆÚ“®‚ªŠ®—¹‚µ‚Ü‚µ‚½BŒ»İ‚Ìƒm[ƒh: {currentPlayerNodeId}");
+        Debug.Log($"[PlayerMapMovementController] ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã‚’ '{targetNodeId}' ã«ç§»å‹•ãŒå®Œäº†ã—ã¾ã—ãŸã€‚ç¾åœ¨ã®ãƒãƒ¼ãƒ‰: {currentPlayerNodeId}");
 
-        // ˆÚ“®Š®—¹ŒãA©“®ƒZƒ“ƒ^ƒŠƒ“ƒOİ’è‚ªON‚Å‚ ‚ê‚ÎŠÔ·‚Å‰æ–Ê‚ğƒZƒ“ƒ^ƒŠƒ“ƒO
+        // ç§»å‹•å®Œäº†å¾Œã€è‡ªå‹•ã‚»ãƒ³ã‚¿ãƒªãƒ³ã‚°è¨­å®šãŒONã§ã‚ã‚Œã°æ™‚é–“å·®ã§ç”»é¢ã‚’ã‚»ãƒ³ã‚¿ãƒªãƒ³ã‚°
         if (shouldCenterViewAfterMove)
         {
             StartCoroutine(CenterViewAfterDelay());
@@ -180,28 +180,28 @@ public class PlayerMapMovementController : MonoBehaviour
     }
 
     /// <summary>
-    /// ’x‰„Œã‚É‰æ–Ê‚ğƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ÉƒZƒ“ƒ^ƒŠƒ“ƒO‚µ‚Ü‚·B
+    /// é…å»¶å¾Œã«ç”»é¢ã‚’ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã«ã‚»ãƒ³ã‚¿ãƒªãƒ³ã‚°ã—ã¾ã™ã€‚
     /// </summary>
     private IEnumerator CenterViewAfterDelay()
     {
-        Debug.Log("[PlayerMapMovementController] CenterViewAfterDelay ƒRƒ‹[ƒ`ƒ“‚ªŠJn‚³‚ê‚Ü‚µ‚½B"); // š’Ç‰Á
-        yield return new WaitForSeconds(centerViewDelay); // w’è‚³‚ê‚½•b”‘Ò‹@
+        Debug.Log("[PlayerMapMovementController] CenterViewAfterDelay ã‚³ãƒ«ãƒ¼ãƒãƒ³ãŒé–‹å§‹ã•ã‚Œã¾ã—ãŸã€‚"); // â˜…è¿½åŠ 
+        yield return new WaitForSeconds(centerViewDelay); // æŒ‡å®šã•ã‚ŒãŸç§’æ•°å¾…æ©Ÿ
 
         if (mapInteractionHandler != null)
         {
-            // MapInteractionHandler‚ÌƒZƒ“ƒ^ƒŠƒ“ƒO‹@”\‚ğƒAƒjƒ[ƒVƒ‡ƒ“‚ÅŒÄ‚Ño‚·
+            // MapInteractionHandlerã®ã‚»ãƒ³ã‚¿ãƒªãƒ³ã‚°æ©Ÿèƒ½ã‚’ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã§å‘¼ã³å‡ºã™
             mapInteractionHandler.CenterViewOnPlayerIcon(instant: false);
-            Debug.Log("[PlayerMapMovementController] MapInteractionHandler.CenterViewOnPlayerIcon ‚ğŒÄ‚Ño‚µ‚Ü‚µ‚½B"); // š’Ç‰Á
+            Debug.Log("[PlayerMapMovementController] MapInteractionHandler.CenterViewOnPlayerIcon ã‚’å‘¼ã³å‡ºã—ã¾ã—ãŸã€‚"); // â˜…è¿½åŠ 
         }
         else
         {
-            Debug.LogWarning("[PlayerMapMovementController] MapInteractionHandler‚ªƒAƒTƒCƒ“‚³‚ê‚Ä‚¢‚È‚¢‚½‚ßA’x‰„ƒZƒ“ƒ^ƒŠƒ“ƒO‚ğÀs‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½B", this);
+            Debug.LogWarning("[PlayerMapMovementController] MapInteractionHandlerãŒã‚¢ã‚µã‚¤ãƒ³ã•ã‚Œã¦ã„ãªã„ãŸã‚ã€é…å»¶ã‚»ãƒ³ã‚¿ãƒªãƒ³ã‚°ã‚’å®Ÿè¡Œã§ãã¾ã›ã‚“ã§ã—ãŸã€‚", this);
         }
-        Debug.Log("[PlayerMapMovementController] CenterViewAfterDelay ƒRƒ‹[ƒ`ƒ“‚ªI—¹‚µ‚Ü‚µ‚½B"); // š’Ç‰Á
+        Debug.Log("[PlayerMapMovementController] CenterViewAfterDelay ã‚³ãƒ«ãƒ¼ãƒãƒ³ãŒçµ‚äº†ã—ã¾ã—ãŸã€‚"); // â˜…è¿½åŠ 
     }
 
     /// <summary>
-    /// ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚ªŒ»İˆÚ“®’†‚Å‚ ‚é‚©‚ğæ“¾‚µ‚Ü‚·B
+    /// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ãŒç¾åœ¨ç§»å‹•ä¸­ã§ã‚ã‚‹ã‹ã‚’å–å¾—ã—ã¾ã™ã€‚
     /// </summary>
     public bool IsPlayerMoving()
     {
