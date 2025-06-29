@@ -1,230 +1,516 @@
+/*--------------------▽--------------------【HTML文書全体に適用するスタイルの設定】*/
+
 html {
+
+	/* スクロールやジャンプを滑らかに表示させる。*/
     scroll-behavior: smooth;
 }
 
+/*--------------------▽--------------------【コンテンツ文書全体に適用するスタイルの設定】*/
+
 body {
+
+	/* body要素のmarginを0にリセットする。*/
     margin: 0;
+
+	/* デフォルトフォントにArialを使用する。利用できない場合はsans-serifを使用する。*/
     font-family: Arial, sans-serif;
+
+	/* デフォルトの行間をフォントサイズの1.6倍に設定する。*/
     line-height: 1.6;
+
+	/* デフォルトのフォントカラーを濃い灰色に設定する。*/
     color: #333;
-    padding-top: 60px; /* ヘッダーの高さ分、コンテンツを下にずらす */
+
+	/* bodyのpadding上部の余白に60pxを設定しコンテンツ領域を下にずらす。
+	 * ※これは固定ヘッダー部が他のコンテンツで隠れない為の余白。*/
+    padding-top: 60px;
 }
 
-/* メインヘッダーのスタイル (変更なし) */
+/*--------------------▽--------------------【ヘッダー部】*/
+
 .main-header {
+
+	/* ヘッダー部の背景カラーを濃い灰色にする。*/
     background-color: #282c34;
+
+	/* フォントカラーを白色にする。*/
     color: #fff;
+
+	/* ヘッダー部のpadding上下に10px、左右に20pxの余白を設定する。*/
     padding: 10px 20px;
-    position: fixed;
+
+	/* ヘッダー部の横幅を親領域と同じにする。*/
     width: 100%;
+
+	/* ヘッダー部を表示領域に常駐させ（スクロールしても固定位置に表示される）。
+	 * ヘッダー部をブラウザ最上部、最左端に配置する。*/
+    position: fixed;
     top: 0;
     left: 0;
+
+	/* ヘッダー部に縦方向2px、ぼかし範囲5px、黒色、透明度20%の影を付ける。*/
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+
+	/* ヘッダー部の表示順序を最前面に設定し、他コンテンツより前に表示させる。*/
     z-index: 1000;
+
+	/* widthで指定したサイズにmarginの大きさを含ませない。*/
     box-sizing: border-box;
 }
 
+/*--------------------▽--------------------【ヘッダー部・コンテンツ】*/
+
 .header-content {
+
+	/* flexboxコンテナを指定し
+	 * header-contentの子要素を両端に配置し均等なスペースを間に分配する。*/
     display: flex;
     justify-content: space-between;
+
+	/* header-contentの子要素を縦方向の中央に配置する。*/
     align-items: center;
+
+	/* header-contentの最大横幅を1200pxに設定する。*/
     max-width: 1200px;
+
+	/* header-contentのmargin上下の余白を0に設定し、左右は自動設定にする。
+	 * ※autoを指定することで表示は親領域の中央になる。*/
     margin: 0 auto;
 }
 
+/*--------------------▽--------------------【ヘッダー部・サイトタイトル】*/
+
 .site-title {
+
+	/* margin上下左右の余白を0に設定する。*/
     margin: 0;
+
+	/* フォントサイズを親要素の1.5倍に設定する。*/
     font-size: 1.5em;
+
+	/* テキストを折り返さない。*/
     white-space: nowrap;
 }
 
-/* ナビゲーションメニューのスタイル (変更なし) */
+/*--------------------▽--------------------【ヘッダー部・ナビメニュー】*/
+
 .main-nav ul {
+
+	/* マーカを設定しない*/
     list-style: none;
+
+	/* margin上下左右の余白を0に設定する。*/
     margin: 0;
+
+	/* paddin上下左右の余白を0に設定する。*/
     padding: 0;
+
+	/* flexboxコンテナを指定し要素を柔軟（横方向）に配置するように設定する。*/
     display: flex;
 }
 
 .main-nav li {
+
+	/* marginの左側に20pxの余白を設定する。*/
     margin-left: 20px;
 }
 
 .main-nav a {
+
+	/* フォントカラーを白色に設定する。*/
     color: #fff;
+
+	/* テキストに下線を付けない。*/
     text-decoration: none;
+
+	/* フォントを太字に設定する。*/
     font-weight: bold;
+
+	/* ホバーした時にhoverに設定したcolorの内容に0.3秒掛けて変化する。*/
     transition: color 0.3s ease;
 }
 
 .main-nav a:hover {
+
+	/* フォントカラーを水色に設定する。*/
     color: #61dafb;
 }
 
-/* メインコンテンツのスタイル (変更なし) */
+/*--------------------▽--------------------【コンテンツ部】*/
+
 .main-content {
+
+	/* 横幅の最大値を1200pxに設定する。*/
     max-width: 1200px;
+
+	/* 要素のmargin上下の余白を20pxに設定し、
+	 * margin左右の余白を自動調整して要素を中央寄せにする。*/
     margin: 20px auto;
+
+	/* 要素の内側上下の余白を0、左右の余白を20pxに設定する。*/
     padding: 0 20px;
 }
 
+/*--------------------▽--------------------【コンテンツ部・配下要素】*/
+
 .content-section {
+
+	/* 背景を白色にする。*/
     background-color: #fff;
+
+	/* 属する要素のpadding上下左右の余白を25pxに設定する。*/
     padding: 25px;
+
+	/* 属する要素のmargin下部の余白を20pxに設定する。*/
     margin-bottom: 20px;
+
+	/* 属する要素のborderの4つの角を8pxで丸めるように設定にする。*/
     border-radius: 8px;
+
+	/* 属する要素に影をつけ
+	 * 影を横方向に0px、縦方向に1px、ぼかし範囲に3pxを設定し、
+	 * 影の色を黒、透明度を10%に設定する。*/
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
+/*--------------------▽--------------------【コンテンツ部・配下要素 h2】*/
+
 .content-section h2 {
+
+	/* 要素h2のフォントカラーを濃い灰色に設定する。*/
     color: #282c34;
+
+	/* 要素h2のborder下部に太さ2pxの一本線を薄い灰色で描画する。*/
     border-bottom: 2px solid #eee;
+
+	/* 要素h2のpadding下部の余白を10pxに設定する。*/
     padding-bottom: 10px;
+
+	/* 要素h2の上部の余白を0に設定する。*/
     margin-top: 0;
 }
 
-/* --- ここから追加 --- */
+/*--------------------▽--------------------【コンテンツ部配下・エリアＡ、Ｂ共通】*/
 
-/* AエリアとBエリアのコンテナに共通のスタイル */
 .area-a, .area-b {
-    min-height: 150px; /* 最低限の高さ */
-    /* background-color: #e9e9e9; */ /* デバッグ用、後で削除または調整 */
-    /* border: 1px dashed #ccc; */ /* デバッグ用、後で削除または調整 */
+
+	/* 最低限の高さを150pxに設定する。*/
+    min-height: 150px;
 }
 
-/* カードコンテナのスタイル (Aエリア内のカードを並べる用) */
+/*--------------------▽--------------------【コンテンツ部配下・エリアＡ・カード形状・配置】*/
+
 .card-container {
-    display: grid; /* Gridレイアウトを使用 */
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* レスポンシブな複数列 */
+
+	/* gridレイアウトを使用し格子状の配置を可能にする。*/
+    display: grid;
+
+	/* 最小値の列幅280pxを持つ列を可能な限り多く均等に自動配置させる。*/
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+
+	/* gridアイテム間に20pxの余白を設定する。*/
     gap: 20px; /* カード間のスペース */
+
+	/* この要素のmargin上部に20pxの余白を設定する。*/
     margin-top: 20px;
 }
 
-/* 個々のカードのスタイル */
+/*--------------------▽--------------------【エリアＡに表示させる個々の情報カードのスタイル】*/
+
 .info-card {
+	/* 背景色を非常に薄い灰色に設定する。*/
     background-color: #f9f9f9;
+
+	/* ボーダーラインに太さ1pxの一本線を薄い灰色で描画する。*/
     border: 1px solid #ddd;
+
+	/* カードの4つの角を8pxで丸める。*/
     border-radius: 8px;
+
+	/* カードのpadding上下左右に15pxの余白を設定する。*/
     padding: 15px;
+
+	/* カードの縦方向に2px、ぼかし範囲4px、黒色、透明度10%の影を付ける。*/
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease; /* ホバー時のアニメーション */
-    cursor: pointer; /* クリック可能であることを示す */
+
+	/* ホバーした時にhoverに設定したtransformとbox-shadowの内容にそれぞれ0.2秒掛けて変化する。*/
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+	/* クリック可能であることを示す。*/
+    cursor: pointer;
 }
+
+/*--------------------▽--------------------【情報カードにホバーしたときの挙動】*/
 
 .info-card:hover {
-    transform: translateY(-5px); /* 少し上に移動 */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* 影を濃くする */
+
+	/* 縦方向に-5px移動させる（負の値は上に移動する）。*/
+    transform: translateY(-5px);
+
+	/* カードの縦方向に4px、ぼかし範囲8px、黒色、透明度20%の影を付ける。*/
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
+
+/*--------------------▽--------------------【情報カード h3 】*/
 
 .info-card h3 {
+
+	/* h3のmargin上部の余白を0に設定する。*/
     margin-top: 0;
+
+	/* h3のフォントカラーをメタリックなグレーにする。*/
     color: #282c34;
+
+	/* フォントサイズを親要素の1.2倍にする。*/
     font-size: 1.2em;
+
+	/* border下部に太さ1pxの一本線を薄い灰色で描画する。*/
     border-bottom: 1px solid #eee;
+
+	/* padding下部に8pxの余白を設定する。*/
     padding-bottom: 8px;
+
+	/* margin下部に10pxの余白を設定する。*/
     margin-bottom: 10px;
 }
+
+/*--------------------▽--------------------【情報カード p】*/
 
 .info-card p {
+
+	/* フォントサイズを親要素の0.9倍に設定する。*/
     font-size: 0.9em;
+
+	/* フォントカラーを灰色に設定する。*/
     color: #555;
+
+	/* margin下部に10pxの余白を設定する。*/
     margin-bottom: 10px;
 }
 
+/*--------------------▽--------------------【情報カード・詳細を見る】*/
+
 .info-card .card-link {
-    display: inline-block; /* リンクをブロック要素のように扱い、余白を設定 */
+
+	/* リンクをブロック要素のように扱い、内側に余白を設定する。*/
+    display: inline-block;
+
+	/* 背景カラーを明るい水色に設定する。*/
     background-color: #61dafb;
+
+	/* フォントカラーを白色に設定する。*/
     color: white;
+
+	/* padding上下に5px、左右に10pxの余白を設定する。*/
     padding: 5px 10px;
+
+	/* ４つの角を5pxで丸める*/
     border-radius: 5px;
+
+	/* テキストに下線を付けない。*/
     text-decoration: none;
+
+	/* フォントサイズを親要素の0.8倍に設定する。*/
     font-size: 0.8em;
+
+	/* ホバー時にhoverに指定した内容に0.3秒掛けて変化する。*/
     transition: background-color 0.3s ease;
 }
 
+/*--------------------▽--------------------【情報カード・詳細をみるにホバーしたときの挙動】*/
+
 .info-card .card-link:hover {
+
+	/* 背景カラーを明るい青色に設定する。*/
     background-color: #21a1f1;
+
 }
 
-/* フッターのスタイル (変更なし) */
+/*--------------------▽--------------------【フッター部】*/
+
 .main-footer {
+
+	/*テキストを縦方向の中央に配置する。*/
     text-align: center;
+
+	/* padding上下左右に20pxの余白を設定する。*/
     padding: 20px;
+
+	/* 背景を薄い白色に設定する。*/
     background-color: #eee;
+
+	/* フォントカラーを濃い灰色に設定する。*/
     color: #666;
+
+	/* marginの上部に30pxの余白を設定する。*/
     margin-top: 30px;
 }
 
-/* --- レスポンシブ対応の考慮（今は適用しないが参考として） --- */
-/* @media (max-width: 768px) {
-    .header-content {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .main-nav ul {
-        flex-direction: column;
-        width: 100%;
-        margin-top: 10px;
-    }
-    .main-nav li {
-        margin: 5px 0;
-    }
-    .card-container {
-        grid-template-columns: 1fr;
-    }
+/*--------------------▽--------------------【スマホ・タブレット対応スタイル】*/
+/*レスポンシブ対応の考慮（今は適用しないが参考として)*/
 
-/* --- 既存のCSSに追記してください --- */
+/* [ビューポートが768px以下の時]を条件とする。*/
 
-/* コードブロックコンテナのスタイル */
+/*	@media (max-width: 768px) {
+		.header-content {
+
+			/* 縦方向に積み重なるように配置する。*/
+/*    	    flex-direction: column;
+
+			/* 子要素を縦方向の開始位置に寄せる。*/
+/*			align-items: flex-start;
+   		}
+
+
+    	.main-nav ul {
+
+			/* 縦方向に積み重なるように配置する。*/
+/*        	flex-direction: column;
+
+			/* 横幅を親要素の横幅と同じサイズにする。*/
+/*        	width: 100%;
+
+			/* margin上部に10pxの余白を設定する。*/
+ /*       	margin-top: 10px;
+    	}
+
+
+    	.main-nav li {
+			/* marginの上下に5pxに余白を設定し、左右の余白を0に設定する。*/
+/*        	margin: 5px 0;
+    	}
+
+
+    	.card-container {
+
+			/* 縦列の幅を均等に指定する。*/
+/*        	grid-template-columns: 1fr;
+    	}
+	}
+
+/*--------------------▽--------------------【コードブロックコンテナ】*/
+
 .code-block-container {
-    position: relative; /* 子要素の絶対配置の基準にする */
-    background-color: #2d2d2d; /* コードブロックの背景色 */
-    color: #f8f8f2; /* コードの文字色 */
+
+	/* 子要素を相対位置で配置する。*/
+    position: relative;
+
+	/* 背景カラーを濃い黒に設定する。*/
+    background-color: #2d2d2d;
+
+	/* フォントカラーを明るい灰色に設定する。*/
+    color: #f8f8f2;
+
+	/* paddingの上下左右に15pxの余白を設定する。*/
     padding: 15px;
+
+	/* ４つの角を5pxで丸める。*/
     border-radius: 5px;
+
+	/* margin上部に15pxの余白を設定する。*/
     margin-top: 15px;
-    overflow-x: auto; /* 横長のコードに対応 */
+
+	/* 横方向にはみ出したテキスト（コード）を、
+	 * スクロールで見れるようにする（下段で表示させる）。*/
+    overflow-x: auto;
 }
 
-/* ファイル名/パス表示のスタイル */
+/*--------------------▽--------------------【コードブロックコンテナ・スクリプト名/パス表示】*/
+
 .code-filename {
+
+	/* フォントサイズを親要素の0.9倍に設定する。*/
     font-size: 0.9em;
+
+	/* フォントカラーを灰色に設定する。*/
     color: #bbb;
+
+	/* margin下部に10pxの余白を設定する。*/
     margin-bottom: 10px;
+
+	/* padding下部に5pxの余白を設定する。*/
     padding-bottom: 5px;
+
+	/* border下部に太さ1pxの一本線を白色、透明度10%で描画する。*/
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* コードコピーボタンのスタイル */
+/*--------------------▽--------------------【コードブロックコンテナ・コピーボタン】*/
+
 .copy-button {
-    position: absolute; /* 親要素（.code-block-container）に対して絶対配置 */
-    top: 10px; /* 上からの位置 */
-    right: 10px; /* 右からの位置 */
-    background-color: #61dafb; /* ボタンの背景色 */
-    color: white; /* 文字色 */
+
+	/* 親要素（.code-block-container）に対して絶対位置で配置し、
+	 * 上から10px、右から10pxの位置に配置する。*/
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+	/* 背景色を明るい水色に設定する。*/
+    background-color: #61dafb;
+
+	/* フォントカラーを白色に設定する*/
+    color: white;
+
+	/* borderを描画しない。*/
     border: none;
+
+	/* paddingの上下に5px、左右に10pxの余白を設定する。*/
     padding: 5px 10px;
+
+	/* ４つの角を5pxで丸める。*/
     border-radius: 5px;
+
+	/* クリック可能にする*/
     cursor: pointer;
+
+	/* フォントサイズを親要素の0.8倍にする。*/
     font-size: 0.8em;
+
+	/* ホバー時にhoverに指定した内容に0.2秒掛けて変化する。*/
     transition: background-color 0.2s ease;
-    z-index: 10; /* 他の要素より手前に表示 */
+
+	/* 他の要素よりも手前に表示させる。*/
+    z-index: 10;
 }
 
+/*--------------------▽--------------------【コピーボタンにホバーしたときの挙動】*/
+
 .copy-button:hover {
+
+	/* 背景カラーを明るい青色に設定する。*/
     background-color: #21a1f1;
 }
 
+/*--------------------▽--------------------【コードブロックコンテナ・pre】*/
+
 /* コード本体のスタイル（syntax highlighterを考慮） */
 .code-block-container pre {
+
+	/* margin上下左右の余白を0に設定する。*/
     margin: 0;
+
+	/* padding上下左右の余白を0に設定する。*/
     padding: 0;
-    white-space: pre-wrap; /* 必要に応じてコードを折り返す */
-    word-break: break-all; /* 単語の途中でも改行 */
+
+	/* テキストの半角スペース、タブ文字、改行をそのまま保持し
+	 * 必要に応じてテキストを改行する。 */
+    white-space: pre-wrap;
+
+	/* 単語途中であってもその位置で折り返す。*/
+    word-break: break-all;
 }
 
+/*--------------------▽--------------------【コードブロックコンテナ・code】*/
+
 .code-block-container code {
-    font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* 等幅フォント */
+
+	/* 使用するフォントの優先順位を指定する（全て等幅フォントを指定）。*/
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+
+	/* フォントサイズを親要素の0.9倍に設定する。*/
     font-size: 0.9em;
+
+	/* 行間をフォントサイズの1.4倍に設定する。*/
     line-height: 1.4;
 }
